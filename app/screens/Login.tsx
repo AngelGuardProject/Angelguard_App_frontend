@@ -21,12 +21,10 @@ const Login = ({navigation}: Props) => {
 
   const onChangeID = useCallback((text: string) => {
     setId(text);
-    console.log(text);
   }, []);
 
   const onChangePW = useCallback((text: string) => {
     setPw(text);
-    console.log(text);
   }, []);
 
   return (

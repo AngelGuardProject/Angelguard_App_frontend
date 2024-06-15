@@ -5,7 +5,6 @@ export const LoginHandler = (
   pw: string,
   navigation: {navigate: (name: string) => void},
 ) => {
-  console.log(id, pw);
   axios
     .post('http://louk342.iptime.org:3000/user/login', {
       user_login_id: id,
