@@ -26,6 +26,7 @@ function App(): React.JSX.Element {
           {props => <Login {...props} />}
         </Stack.Screen>
         <Stack.Screen name="Main" component={Main} />
+        <Stack.Screen name="BlueTooth" component={BlueTooth}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
