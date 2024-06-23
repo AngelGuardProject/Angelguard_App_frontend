@@ -6,6 +6,7 @@ import DiaryWrite from './screens/Diary/DiaryWrite';
 import DiaryDetail from './screens/Diary/DiaryDetail';
 
 import TabNavi from './components/TabNavi';
+import Login from './screens/Login';
 
 const Stack = createStackNavigator();
 
@@ -13,6 +14,9 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        <Stack.Screen name="Login" options={{headerShown: false}}>
+          {props => <Login {...props} />}
+        </Stack.Screen>
         <Stack.Screen
           name="Main"
           component={TabNavi}
