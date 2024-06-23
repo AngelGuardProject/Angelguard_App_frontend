@@ -9,9 +9,9 @@ import React from 'react';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import BlueTooth from './screens/BlueTooth';
+import Main from './screens/Main';
+import Bluetooth from './screens/BlueTooth';
 import BottomTabNavigator from './component/BottomTabNavigator';
-
 import Login from './screens/Login';
 import SignUp from './screens/SignUp';
 import DiaryWrite from './screens/DiaryWrite';
@@ -25,8 +25,7 @@ function App(): React.JSX.Element {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="BlueTooth" component={BlueTooth} />
-
+        <Stack.Screen name="BlueTooth" component={Bluetooth}></Stack.Screen>
         <Stack.Screen
           name="Login"
           options={{
