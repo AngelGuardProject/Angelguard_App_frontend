@@ -10,6 +10,7 @@ import {
 
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {SignUpHandler} from '../api/signup.api';
+
 type Props = {
   navigation: {navigate: (name: string) => void};
 };
@@ -19,6 +20,7 @@ const SignUp = ({navigation}: Props) => {
   const [id, setId] = useState('');
   const [pw, setPw] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
   const onChangeId = useCallback((text: string) => {
     setId(text);
   }, []);
@@ -80,6 +82,12 @@ const SignUp = ({navigation}: Props) => {
           style={styles.signupBtn}>
           <Text style={styles.signupText}>Sign Up</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Login');
+          }}>
+          <Text style={styles.login}>로그인하러가기</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -108,7 +116,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     borderBottomColor: '#d9d9d9',
     borderBottomWidth: 1,
-    marginTop: 49,
+    marginBottom: 49,
   },
   signupBtn: {
     width: 312,
@@ -117,7 +125,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF4D6',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 61,
   },
   signupText: {
     fontSize: 16,
@@ -126,6 +133,12 @@ const styles = StyleSheet.create({
   link: {
     marginTop: 20,
     color: 'blue',
+  },
+  login: {
+    width: 312,
+    marginTop: 12,
+    fontSize: 10,
+    color: '#a6a6a6',
   },
 });
 

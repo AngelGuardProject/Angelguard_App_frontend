@@ -15,11 +15,9 @@ export const SignUpHandler = (
     .then(res => {
       if (res.status === 200) {
         navigation.navigate('Main');
-        // Handle success scenario as per your application flow
       }
     })
     .catch(err => {
       console.log('SignUp error:', err);
-      // Handle error scenario
     });
 };

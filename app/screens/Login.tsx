@@ -38,7 +38,6 @@ const Login = ({navigation}: Props) => {
             placeholder="아이디를 입력해주세요."
             value={id}
             onChangeText={onChangeID}
-            autoFocus
           />
           <TextInput
             style={styles.textInputPW}
@@ -46,7 +45,6 @@ const Login = ({navigation}: Props) => {
             value={pw}
             onChangeText={onChangePW}
             secureTextEntry
-            autoFocus
           />
         </KeyboardAvoidingView>
         <TouchableOpacity
@@ -82,6 +80,8 @@ const styles = StyleSheet.create({
   textInputID: {
     width: 312,
     height: 40,
+    color: '#d9d9d9',
+    fontSize: 11,
     borderBottomColor: '#d9d9d9',
     borderBottomWidth: 1,
   },
@@ -94,6 +94,8 @@ const styles = StyleSheet.create({
   textInputPW: {
     width: 312,
     height: 40,
+    color: '#d9d9d9',
+    fontSize: 11,
     borderBottomColor: '#d9d9d9',
     borderBottomWidth: 1,
     marginTop: 49,
@@ -114,6 +116,8 @@ const styles = StyleSheet.create({
   register: {
     width: 312,
     marginTop: 12,
+    fontSize: 10,
+    color: '#a6a6a6',
   },
 });
 
