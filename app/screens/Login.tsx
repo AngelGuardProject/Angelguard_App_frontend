@@ -56,8 +56,11 @@ const Login = ({navigation}: Props) => {
           style={styles.loginBtn}>
           <Text style={styles.loginText}>Log In</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
-          <Text>아이디가 없다면? 회원가입하러가기</Text>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('SignUp');
+          }}>
+          <Text style={styles.register}>아이디가 없다면? 회원가입하러가기</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -107,6 +110,10 @@ const styles = StyleSheet.create({
   loginText: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  register: {
+    width: 312,
+    marginTop: 12,
   },
 });
 

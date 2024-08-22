@@ -7,6 +7,7 @@ import DiaryDetail from './screens/Diary/DiaryDetail';
 
 import TabNavi from './components/TabNavi';
 import Login from './screens/Login';
+import SignUp from './screens/SignUp';
 
 const Stack = createStackNavigator();
 
@@ -18,11 +19,15 @@ function App() {
           {props => <Login {...props} />}
         </Stack.Screen>
         <Stack.Screen
+          name="SignUp"
+          component={SignUp}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
           name="Main"
           component={TabNavi}
           options={{headerShown: false}}
         />
-
         <Stack.Screen
           name="DiaryWrite"
           component={DiaryWrite}
