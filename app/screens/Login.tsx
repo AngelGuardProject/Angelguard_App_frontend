@@ -35,12 +35,14 @@ const Login = ({navigation}: Props) => {
         <KeyboardAvoidingView behavior={'padding'}>
           <TextInput
             style={styles.textInputID}
+            placeholderTextColor="#d9d9d9"
             placeholder="아이디를 입력해주세요."
             value={id}
             onChangeText={onChangeID}
           />
           <TextInput
             style={styles.textInputPW}
+            placeholderTextColor="#d9d9d9"
             placeholder="비밀번호를 입력해주세요."
             value={pw}
             onChangeText={onChangePW}
