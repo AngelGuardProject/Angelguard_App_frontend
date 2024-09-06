@@ -69,6 +69,7 @@ const Login = ({navigation}: Props) => {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: 'white',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-around',
