@@ -8,6 +8,9 @@ import DiaryDetail from './screens/Diary/DiaryDetail';
 import TabNavi from './components/TabNavi';
 import Login from './screens/Login';
 import SignUp from './screens/SignUp';
+import Amount from './screens/FeedingRecord/Amount';
+import BreastFeeding from './screens/FeedingRecord/BreastFeeding';
+import Intake from './screens/FeedingRecord/Intake';
 
 const Stack = createStackNavigator();
 
@@ -37,6 +40,21 @@ function App() {
           name="DiaryDetail"
           component={DiaryDetail}
           options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Amount"
+          component={Amount}
+          options={{headerShown: true}}
+        />
+        <Stack.Screen
+          name="BreastFeeding"
+          component={BreastFeeding}
+          options={{headerShown: true}}
+        />
+        <Stack.Screen
+          name="Intake"
+          component={Intake}
+          options={{headerShown: true}}
         />
       </Stack.Navigator>
     </NavigationContainer>
