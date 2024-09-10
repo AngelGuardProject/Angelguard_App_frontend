@@ -1,10 +1,21 @@
-import {useIsFocused} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
-import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
-function Main() {
+type Props = {
+  navigation: {navigate: (name: string) => void};
+};
+
+function Main({navigation}: Props) {
   const [tmp, setTmp] = useState(null);
   const [hm, setHm] = useState(null);
 
@@ -41,13 +52,13 @@ function Main() {
             <Text>예빈이</Text>
             <Image
               style={styles.Arrow}
-              source={require('../assets/images/Arrow.png')}
+              source={require('../assets/images/icons/Arrow.png')}
             />
           </View>
           <View>
             <Image
               style={styles.headerR}
-              source={require('../assets/images/hamburgerBar.png')}
+              source={require('../assets/images/icons/hamburgerBar.png')}
             />
           </View>
         </View>
@@ -86,7 +97,26 @@ function Main() {
         <Text style={styles.title}>우리 아기 한눈에 보기</Text>
         <View style={styles.stream}></View>
         <Text style={styles.title}>오늘의 수유시간, 유축량, 섭취량은?</Text>
-        <View style={styles.end}></View>
+        <View style={styles.end}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Amount');
+            }}>
+            <Text>유축량 입력 페이지로 이동</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Intake');
+            }}>
+            <Text>섭취량 입력 페이지로 이동</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('BreastFeeding');
+            }}>
+            <Text>모유수유 시간 입력 페이지로 이동</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
