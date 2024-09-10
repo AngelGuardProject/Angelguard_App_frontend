@@ -52,13 +52,13 @@ function Main({navigation}: Props) {
             <Text>예빈이</Text>
             <Image
               style={styles.Arrow}
-              source={require('../assets/images/Arrow.png')}
+              source={require('../assets/images/icons/Arrow.png')}
             />
           </View>
           <View>
             <Image
               style={styles.headerR}
-              source={require('../assets/images/hamburgerBar.png')}
+              source={require('../assets/images/icons/hamburgerBar.png')}
             />
           </View>
         </View>
@@ -102,7 +102,19 @@ function Main({navigation}: Props) {
             onPress={() => {
               navigation.navigate('Amount');
             }}>
-            <Text>입력 페이지로 이동</Text>
+            <Text>유축량 입력 페이지로 이동</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Intake');
+            }}>
+            <Text>섭취량 입력 페이지로 이동</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('BreastFeeding');
+            }}>
+            <Text>모유수유 시간 입력 페이지로 이동</Text>
           </TouchableOpacity>
         </View>
       </View>
