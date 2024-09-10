@@ -1,10 +1,21 @@
-import {useIsFocused} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
-import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
-function Main() {
+type Props = {
+  navigation: {navigate: (name: string) => void};
+};
+
+function Main({navigation}: Props) {
   const [tmp, setTmp] = useState(null);
   const [hm, setHm] = useState(null);
 
@@ -86,7 +97,14 @@ function Main() {
         <Text style={styles.title}>우리 아기 한눈에 보기</Text>
         <View style={styles.stream}></View>
         <Text style={styles.title}>오늘의 수유시간, 유축량, 섭취량은?</Text>
-        <View style={styles.end}></View>
+        <View style={styles.end}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Amount');
+            }}>
+            <Text>입력 페이지로 이동</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );

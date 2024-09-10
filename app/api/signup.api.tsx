@@ -14,7 +14,7 @@ export const SignUpHandler = (
     })
     .then(res => {
       if (res.status === 200) {
-        navigation.navigate('Main');
+        navigation.navigate('Login');
       }
     })
     .catch(err => {
