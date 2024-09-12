@@ -22,23 +22,25 @@ const DiaryWrite: React.FC<{navigation: DiaryWriteNavigationProp}> = ({
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text>X</Text>
+          <Image
+            source={require('../../assets/images/icons/back.png')}
+            style={styles.cancelIcon}
+          />
         </TouchableOpacity>
-        <Text style={styles.headerText}>{currentDate}</Text>
+        {/* <View style={styles.headerTitleContainer}>
+          <Text style={styles.headerText}>{currentDate}</Text>
+        </View> */}
         <TouchableOpacity>
-          <Text>작성</Text>
+          <Text style={styles.headerButton}>완료</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.content}>
-        <View style={styles.uploadTextBox}>
-          <Text style={styles.uploadText}>사진 업로드</Text>
+        <View>
+          <Text style={styles.currentDate}>2024년 8월 24일 토요일</Text>
         </View>
         <View>
-          <Image
-            source={require('../../assets/images/icons/PhotoPlus.png')}
-            style={styles.photoFrame}
-          />
+          <Text style={styles.contentTitle}>오늘의 하루는 어떠셨나요?</Text>
         </View>
         <View>
           <TextInput
@@ -48,11 +50,28 @@ const DiaryWrite: React.FC<{navigation: DiaryWriteNavigationProp}> = ({
             multiline
           />
         </View>
-        <View>
+        <View style={styles.depContainer}>
           <TextInput
-            style={styles.depInput}
-            placeholder="울딸혜리미님의 오늘은 어떤 하루였나요? "
+            style={[
+              styles.depInput,
+              {
+                height: 60,
+                paddingVertical: 10,
+                textAlignVertical: 'center',
+                fontWeight: '300',
+              },
+            ]}
+            placeholder="오늘도 소중한 하루, 아기의 모든 순간을 기록해보세요."
             placeholderTextColor="#666662"
+          />
+        </View>
+        <View style={styles.uploadTextBox}>
+          <Text style={styles.uploadText}>사진 업로드</Text>
+        </View>
+        <View>
+          <Image
+            source={require('../../assets/images/icons/PhotoPlus.png')}
+            style={styles.photoFrame}
           />
         </View>
       </View>
@@ -64,54 +83,84 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    paddingHorizontal: 16,
+    paddingTop: 10,
+    paddingHorizontal: 25,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    height: 48,
-    marginTop: 8,
+  },
+  headerTitleContainer: {
+    flex: 1,
+    alignItems: 'center',
   },
   headerText: {
     fontFamily: 'SUITE',
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#000000',
+  },
+  cancelIcon: {
+    width: 16,
+    height: 16,
+  },
+  headerButton: {
+    fontFamily: 'SUITE',
+    fontSize: 16,
+    fontWeight: '300',
+    color: '#666662',
+  },
+  currentDate: {
     fontSize: 14,
     fontWeight: '400',
     color: '#000000',
+    marginBottom: 8,
   },
-  uploadTextBox: {
-    marginBottom: 15,
-  },
-  uploadText: {
-    fontSize: 16,
+  contentTitle: {
+    marginBottom: 30,
+    fontSize: 20,
     color: '#000000',
-    fontWeight: '600',
-    fontFamily: 'SUITE',
-    marginBottom: 10,
-  },
-  photoFrame: {
-    width: 67,
-    height: 67,
-    marginBottom: 29,
+    fontWeight: '700',
   },
   content: {
     flex: 1,
     marginTop: 10,
   },
   mainTextInput: {
-    marginBottom: 33,
+    paddingBottom: 20,
+    marginBottom: 15,
     height: 50,
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: 14,
+    fontWeight: '300',
     color: '#666662',
     borderBottomWidth: 1,
     borderBottomColor: '#D9D9D9',
   },
+  depContainer: {
+    height: '48%',
+  },
   depInput: {
     fontFamily: 'SUITE',
     fontSize: 14,
-    fontWeight: '400',
+    fontWeight: '300',
     color: '#666662',
+  },
+  uploadTextBox: {
+    marginBottom: 15,
+  },
+  uploadText: {
+    marginTop: 15,
+    fontSize: 16,
+    color: '#000000',
+    fontWeight: '700',
+    fontFamily: 'SUITE',
+    marginBottom: 5,
+  },
+  photoFrame: {
+    width: 70,
+    height: 70,
+    marginBottom: 29,
   },
 });
 

@@ -16,7 +16,9 @@ const DiaryList: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={styles.header}>육아일지</Text>
+        <View style={styles.headerTitleContainer}>
+          <Text style={styles.header}>육아일지</Text>
+        </View>
       </View>
 
       <Text style={styles.subtitle}>전체일기 1</Text>
@@ -33,10 +35,46 @@ const DiaryList: React.FC = () => {
           onPress={navigateToDiaryDetail}>
           <View style={styles.entryContent}>
             <View style={styles.textContainer}>
-              <Text style={styles.title}>기분 최고였던 하루~</Text>
+              <Text style={styles.title}>오늘 기분 최상이다.</Text>
               <Text style={styles.description}>
-                우리 아이가 좋아하는 이유식도 만들고, 이웃집이랑 인사도 나누었던
-                하루였다...
+                우리 아이가 좋아하는 이유식도 만들고, 이웃집이랑 인 사도
+                나누었던 하루였다...
+              </Text>
+              <Text style={styles.date}>2024년 6월 2일</Text>
+            </View>
+            <Image
+              source={require('../../assets/images/icons/diary1.png')}
+              style={styles.thumbnail}
+            />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.entryItem}
+          onPress={navigateToDiaryDetail}>
+          <View style={styles.entryContent}>
+            <View style={styles.textContainer}>
+              <Text style={styles.title}>오늘 기분 최상이다.</Text>
+              <Text style={styles.description}>
+                우리 아이가 좋아하는 이유식도 만들고, 이웃집이랑 인 사도
+                나누었던 하루였다...
+              </Text>
+              <Text style={styles.date}>2024년 6월 2일</Text>
+            </View>
+            <Image
+              source={require('../../assets/images/icons/diary1.png')}
+              style={styles.thumbnail}
+            />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.entryItem}
+          onPress={navigateToDiaryDetail}>
+          <View style={styles.entryContent}>
+            <View style={styles.textContainer}>
+              <Text style={styles.title}>오늘 기분 최상이다.</Text>
+              <Text style={styles.description}>
+                우리 아이가 좋아하는 이유식도 만들고, 이웃집이랑 인 사도
+                나누었던 하루였다...
               </Text>
               <Text style={styles.date}>2024년 6월 2일</Text>
             </View>
@@ -55,17 +93,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    paddingTop: 16,
-    paddingHorizontal: 16,
+    paddingTop: 10,
+    paddingHorizontal: 20,
   },
   headerContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
+  },
+  headerTitleContainer: {
+    flex: 1,
+    alignItems: 'center',
   },
   header: {
     fontFamily: 'SUITE',
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '400',
     color: '#000000',
   },
   subtitle: {
@@ -74,17 +117,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     color: '#000000',
+    marginTop: 10,
     marginBottom: 10,
   },
   writeButton: {
-    width: 80,
-    height: 30,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 15,
-    borderWidth: 1,
-    borderColor: '#666662',
-    backgroundColor: '#FFFFFF',
     alignSelf: 'flex-end',
     marginBottom: 10,
   },
@@ -92,17 +130,17 @@ const styles = StyleSheet.create({
     fontFamily: 'SUITE',
     fontSize: 14,
     fontWeight: '400',
-    color: '#666662',
+    color: '#707070 ',
   },
   entryContainer: {
     marginTop: 10,
     textAlign: 'center',
   },
   entryItem: {
-    width: 350,
-    height: 98,
+    width: '100%',
+    height: 110,
     borderRadius: 10,
-    marginBottom: 10,
+    marginBottom: 15,
     backgroundColor: '#FFFFFF',
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
@@ -120,9 +158,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'SUITE',
-    fontSize: 14,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: '400',
     color: '#000000',
+    marginTop: 2,
+    marginBottom: 8,
   },
   description: {
     fontFamily: 'SUITE',
@@ -138,8 +178,8 @@ const styles = StyleSheet.create({
     color: '#A6A6A6',
   },
   thumbnail: {
-    width: 70,
-    height: 70,
+    width: 80,
+    height: 80,
     marginLeft: 10,
   },
 });
