@@ -2,7 +2,7 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Image, ViewStyle, TextStyle} from 'react-native';
 import Home from '../screens/Main';
-import Controller from '../screens/Controller';
+import Controller from '../screens/Hardware/Controller';
 import Scheduler from '../screens/Scheduler/SchedulerMain';
 import Diary from '../screens/Diary/DiaryList';
 
