@@ -42,6 +42,58 @@ function App() {
           component={DiaryDetail}
           options={{headerShown: false}}
         />
+
+        <Stack.Screen
+          name="Amount"
+          component={Amount}
+          options={{
+            headerShown: true,
+            title: '유축량 입력',
+            headerTitleAlign: 'center',
+            headerLeft: ({onPress}) => (
+              <TouchableOpacity onPress={onPress}>
+                <Image
+                  style={{width: 9, height: 17, marginLeft: 24}}
+                  source={require('../app/assets/images/icons/LeftArrow.png')}
+                />
+              </TouchableOpacity>
+            ),
+          }}
+        />
+        <Stack.Screen
+          name="BreastFeeding"
+          component={BreastFeeding}
+          options={{
+            headerShown: true,
+            title: '모유 수유량 입력',
+            headerTitleAlign: 'center',
+            headerLeft: ({onPress}) => (
+              <TouchableOpacity onPress={onPress}>
+                <Image
+                  style={{width: 9, height: 17, marginLeft: 24}}
+                  source={require('../app/assets/images/icons/LeftArrow.png')}
+                />
+              </TouchableOpacity>
+            ),
+          }}
+        />
+        <Stack.Screen
+          name="Intake"
+          component={Intake}
+          options={{
+            headerShown: true,
+            title: '섭취량 입력',
+            headerTitleAlign: 'center',
+            headerLeft: ({onPress}) => (
+              <TouchableOpacity onPress={onPress}>
+                <Image
+                  style={{width: 9, height: 17, marginLeft: 24}}
+                  source={require('../app/assets/images/icons/LeftArrow.png')}
+                />
+              </TouchableOpacity>
+            ),
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
