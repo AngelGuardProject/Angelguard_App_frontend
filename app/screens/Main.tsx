@@ -103,7 +103,7 @@ function Main({navigation}: Props) {
           <TouchableOpacity
             style={styles.TouchInput}
             onPress={() => {
-              navigation.navigate('Amount');
+              navigation.navigate('BreastFeeding');
             }}>
             <View style={styles.endLeft}>
               <Image
@@ -125,7 +125,7 @@ function Main({navigation}: Props) {
           <TouchableOpacity
             style={styles.TouchInput}
             onPress={() => {
-              navigation.navigate('Intake');
+              navigation.navigate('Amount');
             }}>
             <View style={styles.endLeft}>
               <Image
@@ -148,7 +148,7 @@ function Main({navigation}: Props) {
           <TouchableOpacity
             style={styles.TouchInput}
             onPress={() => {
-              navigation.navigate('BreastFeeding');
+              navigation.navigate('Intake');
             }}>
             <View style={styles.endLeft}>
               <Image
