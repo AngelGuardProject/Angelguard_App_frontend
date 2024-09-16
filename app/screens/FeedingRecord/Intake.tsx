@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import Memo from '../../components/Input/Memo';
 
 const Intake = () => {
   return (
@@ -53,13 +54,7 @@ const Intake = () => {
           <Text style={styles.BtnText}>+100ml</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.MemoWrap}>
-        <Text style={styles.memoTitle}>섭취량 메모</Text>
-        <TextInput
-          style={styles.Memo}
-          placeholder="섭취 시 특이사항을 입력해주세요."
-        />
-      </View>
+      <Memo />
       <TouchableOpacity style={styles.wrapSaveBtn}>
         <Text style={styles.saveBtn}>저장하기</Text>
       </TouchableOpacity>

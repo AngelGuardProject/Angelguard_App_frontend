@@ -5,6 +5,7 @@ import Home from '../screens/Main';
 import Controller from '../screens/Hardware/Controller';
 import Scheduler from '../screens/Scheduler/SchedulerMain';
 import Diary from '../screens/Diary/DiaryList';
+import {MainStackNavigator} from '../StackNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -60,7 +61,7 @@ const TabNavi = () => {
       })}>
       <Tab.Screen
         name="Home"
-        component={Home}
+        component={MainStackNavigator}
         options={{
           tabBarLabel: 'home',
           headerShown: false,

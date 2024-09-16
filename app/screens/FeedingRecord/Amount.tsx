@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import Memo from '../../components/Input/Memo';
 
 const Amount = () => {
   return (
@@ -53,13 +54,7 @@ const Amount = () => {
           <Text style={styles.BtnText}>+100ml</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.MemoWrap}>
-        <Text style={styles.memoTitle}>유축량 메모</Text>
-        <TextInput
-          style={styles.Memo}
-          placeholder="유축 시 특이사항을 입력해주세요."
-        />
-      </View>
+      <Memo />
       <TouchableOpacity style={styles.wrapSaveBtn}>
         <Text style={styles.saveBtn}>저장하기</Text>
       </TouchableOpacity>
@@ -92,23 +87,6 @@ const styles = StyleSheet.create({
     width: 132,
     borderBottomWidth: 1,
     borderBottomColor: '#666662',
-  },
-  MemoWrap: {
-    marginTop: 62,
-    width: '90%',
-    height: '40%',
-  },
-  memoTitle: {
-    fontSize: 14,
-    color: '#666662',
-  },
-  Memo: {
-    width: '100%',
-    borderWidth: 1,
-    borderColor: '#666662',
-    height: '80%',
-    marginTop: 15,
-    borderRadius: 10,
   },
   wrapSaveBtn: {
     width: '90%',
