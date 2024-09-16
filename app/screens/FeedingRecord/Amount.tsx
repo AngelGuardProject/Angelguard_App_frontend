@@ -9,7 +9,8 @@ import {
 
 const Amount = () => {
   return (
-    <SafeAreaView style={{flex: 1, alignItems: 'center'}}>
+    <SafeAreaView
+      style={{flex: 1, alignItems: 'center', backgroundColor: 'white'}}>
       <View style={{width: '90%'}}>
         <Text
           style={{

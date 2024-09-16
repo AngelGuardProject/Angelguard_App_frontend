@@ -9,7 +9,8 @@ import {
 
 const BreastFeeding = () => {
   return (
-    <SafeAreaView style={{flex: 1, alignItems: 'center'}}>
+    <SafeAreaView
+      style={{flex: 1, alignItems: 'center', backgroundColor: 'white'}}>
       <View style={{width: '90%'}}>
         <Text
           style={{
@@ -28,31 +29,62 @@ const BreastFeeding = () => {
             color: '#a6a6a6',
             marginBottom: 46,
           }}>
-          어제 모유수유한 시간과 비교한 결과를 알려주어 산모의 건강관리에 도움을
-          줍니다.
+          어제 모유수유한 시간과 비교한 결과를{'\n'} 알려주어 산모의 건강관리에
+          도움을 줍니다.
         </Text>
       </View>
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
-        <Text>수유 시간대</Text>
-        <View style={{flexDirection: 'row'}}>
-          <TextInput style={styles.input} />
-          <Text style={{marginTop: 30, marginLeft: 15}}>ml</Text>
+        <Text style={{color: '#666662', fontSize: 14, fontWeight: 'regular'}}>
+          수유 시간대
+        </Text>
+        <View style={styles.Wrap}>
+          <View>
+            <Text
+              style={{
+                fontSize: 11,
+                fontWeight: 'regular',
+                color: '#a6a6a6',
+              }}>
+              시작시간
+            </Text>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text style={styles.bigText}>오후</Text>
+              <Text style={styles.bigText}>5:00</Text>
+            </View>
+            <Text
+              style={{
+                color: '#666662',
+                fontSize: 14,
+                fontWeight: 'regular',
+                marginTop: 5,
+              }}>
+              2024년 9월 16일
+            </Text>
+          </View>
+          <View>
+            <Text
+              style={{fontSize: 11, fontWeight: 'regular', color: '#a6a6a6'}}>
+              종료시간
+            </Text>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text style={styles.bigText}>오후</Text>
+              <Text style={styles.bigText}>5:00</Text>
+            </View>
+            <Text
+              style={{
+                color: '#666662',
+                fontSize: 14,
+                fontWeight: 'regular',
+                marginTop: 5,
+              }}>
+              2024년 9월 16일
+            </Text>
+          </View>
         </View>
       </View>
-      <View style={styles.addBtns}>
-        <TouchableOpacity style={styles.addBtn}>
-          <Text style={styles.BtnText}>+5ml</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.addBtn}>
-          <Text style={styles.BtnText}>+10ml</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.addBtn}>
-          <Text style={styles.BtnText}>+50ml</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.addBtn}>
-          <Text style={styles.BtnText}>+100ml</Text>
-        </TouchableOpacity>
-      </View>
+
       <View style={styles.MemoWrap}>
         <Text style={styles.memoTitle}>모유수유 메모</Text>
         <TextInput
@@ -121,6 +153,18 @@ const styles = StyleSheet.create({
   saveBtn: {
     color: '#666662',
     fontSize: 15,
+  },
+  Wrap: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 35,
+    width: '70%',
+  },
+  bigText: {
+    color: '#666662',
+    fontSize: 18,
+    fontWeight: 'regular',
+    marginTop: 13,
   },
 });
 
