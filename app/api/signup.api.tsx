@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {ToastAndroid} from 'react-native';
 
 export const SignUpHandler = (
   username: string,
@@ -18,6 +19,11 @@ export const SignUpHandler = (
       }
     })
     .catch(err => {
-      console.log('SignUp error:', err);
+      if (err.status == 402) {
+        ToastAndroid.show('이미 존재하는 아이디입니다.', ToastAndroid.SHORT);
+      }
+      if (err.status == 403) {
+        ToastAndroid.show('정보를 모두 입력해주세요.', ToastAndroid.SHORT);
+      }
     });
 };
