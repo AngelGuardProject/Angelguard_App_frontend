@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -77,7 +78,14 @@ const SignUp = ({navigation}: Props) => {
         </KeyboardAvoidingView>
         <TouchableOpacity
           onPress={() => {
-            SignUpHandler(nickname, id, pw, navigation);
+            if (pw == confirmPassword) {
+              SignUpHandler(nickname, id, pw, navigation);
+            } else {
+              ToastAndroid.show(
+                '비밀번호와 비밀번호 체크가 일치하지 않습니다.',
+                ToastAndroid.SHORT,
+              );
+            }
           }}
           style={styles.signupBtn}>
           <Text style={styles.signupText}>Sign Up</Text>
