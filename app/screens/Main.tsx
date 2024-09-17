@@ -13,9 +13,13 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import MainCarousel from '../components/Carousel/MainCarousel';
+import {HeaderLeft, HeaderRight} from '../components/Header/MainHeader';
 
 type Props = {
-  navigation: {navigate: (name: string) => void};
+  navigation: {
+    openDrawer(): void;
+    navigate: (name: string) => void;
+  };
 };
 
 function Main({navigation}: Props) {
@@ -75,19 +79,8 @@ function Main({navigation}: Props) {
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <View style={styles.header}>
-          <View style={styles.headerL}>
-            <Text>예빈이</Text>
-            <Image
-              style={styles.Arrow}
-              source={require('../assets/images/icons/Arrow.png')}
-            />
-          </View>
-          <View>
-            <Image
-              style={styles.headerR}
-              source={require('../assets/images/icons/hamburgerBar.png')}
-            />
-          </View>
+          <HeaderLeft />
+          <HeaderRight onPress={() => navigation.openDrawer()} />
         </View>
         <MainCarousel
           gap={13}
@@ -183,19 +176,7 @@ const styles = StyleSheet.create({
     marginBottom: 17,
     marginTop: 10,
   },
-  headerL: {
-    flexDirection: 'row',
-  },
-  Arrow: {
-    width: 9,
-    height: 9,
-    marginVertical: 'auto',
-    marginHorizontal: 8,
-  },
-  headerR: {
-    width: 14,
-    height: 13,
-  },
+
   slider: {
     backgroundColor: '#fff',
     borderColor: 'endregion',
