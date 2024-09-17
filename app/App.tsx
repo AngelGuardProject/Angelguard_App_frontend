@@ -103,13 +103,9 @@ function App() {
         <Stack.Screen
           name="MyInfo"
           component={MyInfo}
-          options={{headerShown: false}}
+          options={{headerShown: true}}
         />
-        <Stack.Screen
-          name="BabyInfo"
-          component={BabyInfo}
-          options={{headerShown: false}}
-        />
+        <Stack.Screen name="BabyInfo" component={BabyInfo} />
       </Stack.Navigator>
     </NavigationContainer>
   );

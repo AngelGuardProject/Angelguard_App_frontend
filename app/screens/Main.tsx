@@ -112,7 +112,7 @@ function Main({navigation}: Props) {
             <View style={styles.endRight}>
               <Text style={styles.inputText}>입력하기</Text>
               <Image
-                style={{width: 9, height: 17, marginLeft: 3}}
+                style={{width: 10, height: 10, marginLeft: 3, marginRight: 16}}
                 source={require('../assets/images/icons/ArrowRight.png')}
               />
             </View>
@@ -135,7 +135,7 @@ function Main({navigation}: Props) {
             <View style={styles.endRight}>
               <Text style={styles.inputText}>입력하기</Text>
               <Image
-                style={{width: 9, height: 17, marginLeft: 3}}
+                style={{width: 10, height: 10, marginLeft: 3, marginRight: 16}}
                 source={require('../assets/images/icons/ArrowRight.png')}
               />
             </View>
@@ -157,7 +157,7 @@ function Main({navigation}: Props) {
             <View style={styles.endRight}>
               <Text style={styles.inputText}>입력하기</Text>
               <Image
-                style={{width: 9, height: 17, marginLeft: 3}}
+                style={{width: 10, height: 10, marginLeft: 3, marginRight: 16}}
                 source={require('../assets/images/icons/ArrowRight.png')}
               />
             </View>
@@ -252,11 +252,9 @@ const styles = StyleSheet.create({
     marginTop: 25,
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 16,
   },
-
   inputText: {
-    color: 'black',
+    color: '#666662',
     fontSize: 10,
   },
   inputImage: {
