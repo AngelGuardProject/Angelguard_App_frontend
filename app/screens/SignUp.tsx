@@ -49,7 +49,6 @@ const SignUp = ({navigation}: Props) => {
             placeholder="닉네임을 입력해주세요."
             value={nickname}
             onChangeText={onChangeNickname}
-            autoFocus
           />
           <TextInput
             style={styles.input}
@@ -57,7 +56,6 @@ const SignUp = ({navigation}: Props) => {
             placeholder="아이디를 입력해주세요."
             value={id}
             onChangeText={onChangeId}
-            autoFocus
           />
           <TextInput
             style={styles.input}

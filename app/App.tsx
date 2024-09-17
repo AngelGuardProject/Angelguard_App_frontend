@@ -12,6 +12,10 @@ import Amount from './screens/FeedingRecord/Amount';
 import BreastFeeding from './screens/FeedingRecord/BreastFeeding';
 import Intake from './screens/FeedingRecord/Intake';
 import {Image, Text, TouchableOpacity} from 'react-native';
+import DrawerNavigator from './DrawerNavigator';
+import MyInfo from './screens/Information/MyInfo';
+import BabyInfo from './screens/Information/BabyInfo';
+import {HeaderLeft, HeaderRight} from './components/Header/MainHeader';
 
 const Stack = createStackNavigator();
 
@@ -29,8 +33,10 @@ function App() {
         />
         <Stack.Screen
           name="Main"
-          component={TabNavi}
-          options={{headerShown: false}}
+          component={DrawerNavigator}
+          options={{
+            headerShown: false,
+          }}
         />
         <Stack.Screen
           name="DiaryWrite"
@@ -42,6 +48,7 @@ function App() {
           component={DiaryDetail}
           options={{headerShown: false}}
         />
+
         <Stack.Screen
           name="Amount"
           component={Amount}
@@ -92,6 +99,16 @@ function App() {
               </TouchableOpacity>
             ),
           }}
+        />
+        <Stack.Screen
+          name="MyInfo"
+          component={MyInfo}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="BabyInfo"
+          component={BabyInfo}
+          options={{headerShown: false}}
         />
       </Stack.Navigator>
     </NavigationContainer>

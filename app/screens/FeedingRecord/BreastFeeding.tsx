@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import Memo from '../../components/Input/Memo';
 
 const BreastFeeding = () => {
   return (
@@ -84,14 +85,7 @@ const BreastFeeding = () => {
           </View>
         </View>
       </View>
-
-      <View style={styles.MemoWrap}>
-        <Text style={styles.memoTitle}>모유수유 메모</Text>
-        <TextInput
-          style={styles.Memo}
-          placeholder="모유수유 시 특이사항을 입력해주세요."
-        />
-      </View>
+      <Memo />
       <TouchableOpacity style={styles.wrapSaveBtn}>
         <Text style={styles.saveBtn}>저장하기</Text>
       </TouchableOpacity>

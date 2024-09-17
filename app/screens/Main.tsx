@@ -13,14 +13,20 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import MainCarousel from '../components/Carousel/MainCarousel';
+import {HeaderLeft, HeaderRight} from '../components/Header/MainHeader';
+import SelectBabyModal from '../components/Modal/SelectBabyModal';
 
 type Props = {
-  navigation: {navigate: (name: string) => void};
+  navigation: {
+    openDrawer(): void;
+    navigate: (name: string) => void;
+  };
 };
 
 function Main({navigation}: Props) {
   const [tmp, setTmp] = useState(null);
   const [hm, setHm] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const isFocused = useIsFocused();
 
@@ -75,19 +81,8 @@ function Main({navigation}: Props) {
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <View style={styles.header}>
-          <View style={styles.headerL}>
-            <Text>예빈이</Text>
-            <Image
-              style={styles.Arrow}
-              source={require('../assets/images/icons/Arrow.png')}
-            />
-          </View>
-          <View>
-            <Image
-              style={styles.headerR}
-              source={require('../assets/images/icons/hamburgerBar.png')}
-            />
-          </View>
+          <HeaderLeft onPress={() => setModalVisible(true)} />
+          <HeaderRight onPress={() => navigation.openDrawer()} />
         </View>
         <MainCarousel
           gap={13}
@@ -169,6 +164,10 @@ function Main({navigation}: Props) {
           </TouchableOpacity>
         </View>
       </View>
+      <SelectBabyModal
+        setModalVisible={setModalVisible}
+        modalVisible={modalVisible}
+      />
     </SafeAreaView>
   );
 }
@@ -183,19 +182,7 @@ const styles = StyleSheet.create({
     marginBottom: 17,
     marginTop: 10,
   },
-  headerL: {
-    flexDirection: 'row',
-  },
-  Arrow: {
-    width: 9,
-    height: 9,
-    marginVertical: 'auto',
-    marginHorizontal: 8,
-  },
-  headerR: {
-    width: 14,
-    height: 13,
-  },
+
   slider: {
     backgroundColor: '#fff',
     borderColor: 'endregion',

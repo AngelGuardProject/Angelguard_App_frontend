@@ -1,10 +1,10 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Image, ViewStyle, TextStyle} from 'react-native';
-import Home from '../screens/Main';
 import Controller from '../screens/Hardware/Controller';
 import Scheduler from '../screens/Scheduler/SchedulerMain';
 import Diary from '../screens/Diary/DiaryList';
+import Main from '../screens/Main';
 
 const Tab = createBottomTabNavigator();
 
@@ -60,7 +60,7 @@ const TabNavi = () => {
       })}>
       <Tab.Screen
         name="Home"
-        component={Home}
+        component={Main}
         options={{
           tabBarLabel: 'home',
           headerShown: false,
