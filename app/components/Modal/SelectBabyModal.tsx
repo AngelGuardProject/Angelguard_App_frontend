@@ -96,7 +96,7 @@ const SelectBabyModal = (props: any) => {
             <View style={styles.itemEnd}>
               <Image
                 style={styles.img}
-                source={require('../../assets/images/icons/check_icon.png')}
+                source={require('../../assets/images/icons/Plus.png')}
               />
               <Text style={styles.text}>아이추가하기</Text>
             </View>
