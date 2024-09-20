@@ -103,9 +103,53 @@ function App() {
         <Stack.Screen
           name="MyInfo"
           component={MyInfo}
-          options={{headerShown: true}}
+          options={{
+            headerShown: true,
+            title: '내 정보',
+            headerTitleAlign: 'left',
+            headerStyle: {
+              height: 45,
+            },
+            headerTintColor: 'black',
+            headerTitleStyle: {
+              fontSize: 14,
+              fontWeight: 'regular',
+            },
+            headerLeft: ({onPress}) => (
+              <TouchableOpacity onPress={onPress}>
+                <Image
+                  style={{width: 9, height: 17, marginLeft: 24}}
+                  source={require('../app/assets/images/icons/LeftArrow.png')}
+                />
+              </TouchableOpacity>
+            ),
+          }}
         />
-        <Stack.Screen name="BabyInfo" component={BabyInfo} />
+        <Stack.Screen
+          name="BabyInfo"
+          component={BabyInfo}
+          options={{
+            headerShown: true,
+            title: '아이 정보',
+            headerTitleAlign: 'left',
+            headerStyle: {
+              height: 45,
+            },
+            headerTintColor: 'black',
+            headerTitleStyle: {
+              fontSize: 14,
+              fontWeight: 'regular',
+            },
+            headerLeft: ({onPress}) => (
+              <TouchableOpacity onPress={onPress}>
+                <Image
+                  style={{width: 9, height: 17, marginLeft: 24}}
+                  source={require('../app/assets/images/icons/LeftArrow.png')}
+                />
+              </TouchableOpacity>
+            ),
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
