@@ -3,9 +3,7 @@ import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
-  FlatList,
   Image,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -106,7 +104,7 @@ function Main({navigation}: Props) {
                 source={require('../assets/images/mom.png')}
               />
               <Text style={styles.inputLeftText}>
-                어제보다 30분 빨리 유축했어요.
+                어제보다 30분 빨리 수유했어요.
               </Text>
             </View>
             <View style={styles.endRight}>

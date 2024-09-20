@@ -6,16 +6,24 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Memo from '../../components/Input/Memo';
+import {useCallback, useState} from 'react';
 
-const Amount = () => {
+interface PropsType {
+  navigation: {navigate: (name: string) => void};
+}
+
+const Amount = ({navigation}: PropsType) => {
   return (
     <SafeAreaView
-      style={{flex: 1, alignItems: 'center', backgroundColor: 'white'}}>
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: 'white',
+        justifyContent: 'center',
+      }}>
       <View style={{width: '90%'}}>
         <Text
           style={{
-            marginTop: 50,
             fontSize: 20,
             fontWeight: 'semibold',
             color: '#666662',
@@ -54,7 +62,6 @@ const Amount = () => {
           <Text style={styles.BtnText}>+100ml</Text>
         </TouchableOpacity>
       </View>
-      <Memo />
       <TouchableOpacity style={styles.wrapSaveBtn}>
         <Text style={styles.saveBtn}>저장하기</Text>
       </TouchableOpacity>
@@ -95,6 +102,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFF4D6',
     borderRadius: 10,
+    marginTop: 105,
   },
   saveBtn: {
     color: '#666662',
