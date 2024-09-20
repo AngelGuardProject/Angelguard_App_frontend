@@ -39,7 +39,7 @@ const SideDrawer = ({navigation}: PropsType) => {
           <Text style={styles.listText}>내 정보 보기</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => navigation.navigate('BabyInfo')}
+          onPress={() => navigation.navigate('BabyList')}
           style={styles.item}>
           <Image
             source={require('../../assets/images/icons/Baby.png')}
