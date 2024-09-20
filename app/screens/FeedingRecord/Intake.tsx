@@ -6,16 +6,32 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Memo from '../../components/Input/Memo';
+import {useCallback, useState} from 'react';
+import {IntakeHandler} from '../../api/intake.api';
 
-const Intake = () => {
+interface PropsType {
+  navigation: {navigate: (name: string) => void};
+}
+
+const Intake = ({navigation}: PropsType) => {
+  const [amount, setAmount] = useState(0);
+  const baby = '최혜림';
+
+  const onChangeAmount = useCallback((text: string) => {
+    setAmount(Number(text));
+  }, []);
+
   return (
     <SafeAreaView
-      style={{flex: 1, alignItems: 'center', backgroundColor: 'white'}}>
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: 'white',
+        justifyContent: 'center',
+      }}>
       <View style={{width: '90%'}}>
         <Text
           style={{
-            marginTop: 50,
             fontSize: 20,
             fontWeight: 'semibold',
             color: '#666662',
@@ -36,7 +52,11 @@ const Intake = () => {
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <Text>섭취량</Text>
         <View style={{flexDirection: 'row'}}>
-          <TextInput style={styles.input} />
+          <TextInput
+            onChangeText={onChangeAmount}
+            keyboardType="numeric"
+            style={styles.input}
+          />
           <Text style={{marginTop: 30, marginLeft: 15}}>ml</Text>
         </View>
       </View>
@@ -54,8 +74,12 @@ const Intake = () => {
           <Text style={styles.BtnText}>+100ml</Text>
         </TouchableOpacity>
       </View>
-      <Memo />
-      <TouchableOpacity style={styles.wrapSaveBtn}>
+      <TouchableOpacity
+        onPress={() => {
+          console.log(amount, baby);
+          IntakeHandler(amount, baby, navigation);
+        }}
+        style={styles.wrapSaveBtn}>
         <Text style={styles.saveBtn}>저장하기</Text>
       </TouchableOpacity>
     </SafeAreaView>
@@ -112,6 +136,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFF4D6',
     borderRadius: 10,
+    marginTop: 105,
   },
   saveBtn: {
     color: '#666662',
