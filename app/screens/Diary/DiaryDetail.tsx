@@ -19,7 +19,7 @@ const DiaryDetail: React.FC<DiaryDetailProps> = ({navigation}) => {
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <View style={styles.header}>
           <HeaderLeft onPress={() => setModalVisible(true)} />
-          <HeaderRight onPress={() => navigation.openDrawer()} />
+          <HeaderRight />
         </View>
 
         <View style={styles.titleContainer}>
