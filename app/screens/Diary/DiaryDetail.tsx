@@ -1,98 +1,110 @@
-import React from 'react';
-import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, Text, View, Image} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
+import {HeaderLeft, HeaderRight} from '../../components/Header/MainHeader';
+import SelectBabyModal from '../../components/Modal/SelectBabyModal';
 
 type DiaryDetailProps = {
   navigation: StackNavigationProp<any, any>;
   route: RouteProp<any, any>;
 };
 
-const DiaryDetail: React.FC<DiaryDetailProps> = ({navigation, route}) => {
+const DiaryDetail: React.FC<DiaryDetailProps> = ({navigation}) => {
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+      <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        <View style={styles.header}>
+          <HeaderLeft onPress={() => setModalVisible(true)} />
+          <HeaderRight />
+        </View>
+
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>9월 첫주 일기</Text>
+          <View style={styles.dateContainer}>
+            <Text style={styles.date}>2024. 9. 13. 14:10</Text>
+            <Image
+              source={require('../../assets/images/icons/dotmenuBar.png')}
+              style={styles.icon}
+            />
+          </View>
+        </View>
+
+        <View style={styles.depContainer}>
+          <Text style={styles.depText}>가을이 오고있어요</Text>
           <Image
-            source={require('../../assets/images/icons/back.png')}
-            style={styles.backIcon}
+            source={require('../../assets/images/hamster.png')}
+            style={styles.hamsterImage}
           />
-        </TouchableOpacity>
-        <View style={styles.headerTitleContainer}>
-          <Text style={styles.headerText}>6월 2일 일요일</Text>
         </View>
       </View>
-
-      <View style={styles.contentContainer}>
-        <Text style={styles.title}>기분 최고였던 하루~</Text>
-        <Text style={styles.description}>
-          우리 아이가 좋아하는 이유식도 만들고, 이웃집이랑 인사도 나누었던
-          하루였다. 육아에 대해서 더더욱 배우게 되었다. 좋은 하루였다. 언젠가는
-          완벽한 부모가 되길 바라며.
-        </Text>
-        <Image
-          source={require('../../assets/images/icons/diary1.png')} // 이미지 경로 설정
-          style={styles.image}
-          resizeMode="cover"
-        />
-      </View>
+      <SelectBabyModal
+        setModalVisible={setModalVisible}
+        modalVisible={modalVisible}
+      />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    paddingTop: 10,
-    paddingHorizontal: 25,
-  },
   header: {
+    width: '90%',
+    height: 40,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 17,
+    marginTop: 10,
   },
-  headerTitleContainer: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  headerText: {
-    fontFamily: 'SUITE',
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#000000',
-  },
-  backIcon: {
-    width: 15,
-    height: 15,
-  },
-  goback: {
-    fontSize: 16,
-  },
-  contentContainer: {
-    flex: 1,
-    marginTop: 30,
+  titleContainer: {
+    marginTop: 10,
+    paddingTop: 15,
+    width: '90%',
+    height: 70,
+    borderBottomWidth: 1,
+    borderBottomColor: '#D9D9D9',
+    paddingBottom: 15,
   },
   title: {
-    fontFamily: 'SUITE',
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#000000',
-    marginBottom: 20,
-  },
-  description: {
-    fontFamily: 'SUITE',
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: '400',
-    color: '#666662',
-    lineHeight: 20,
-    marginBottom: 30,
+    color: 'black',
+    textAlign: 'left',
   },
-  image: {
+  dateContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  date: {
+    fontSize: 12,
+    color: '#A6A6A6',
+    textAlign: 'right',
+    marginRight: 7,
+  },
+  icon: {
+    width: 15,
+    height: 16,
+  },
+
+  // New styles for depContainer
+  depContainer: {
+    width: '90%',
+    marginTop: 21,
+  },
+  depText: {
+    textAlign: 'left',
+    fontSize: 15,
+    color: 'black',
+    marginBottom: 21,
+  },
+  hamsterImage: {
     width: '100%',
-    height: 350,
-    borderRadius: 20,
+    height: 310,
+    resizeMode: 'cover',
   },
 });
 

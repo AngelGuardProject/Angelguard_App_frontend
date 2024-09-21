@@ -14,96 +14,53 @@ const DiaryList: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <View style={styles.headerTitleContainer}>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+      <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        <View style={styles.headerContainer}>
           <Text style={styles.header}>육아일지</Text>
         </View>
-      </View>
 
-      <Text style={styles.subtitle}>전체일기 1</Text>
+        <View style={styles.totalDiaryContainer}>
+          <Text style={styles.totalDiaryCount}>전체일기 1</Text>
+        </View>
 
-      <TouchableOpacity
-        style={styles.writeButton}
-        onPress={() => navigation.navigate('DiaryWrite')}>
-        <Text style={styles.buttonText}>작성하기</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.writeButton}
+          onPress={() => navigation.navigate('DiaryWrite')}>
+          <Text style={styles.buttonText}>작성하기</Text>
+        </TouchableOpacity>
 
-      <View style={styles.entryContainer}>
-        <TouchableOpacity
-          style={styles.entryItem}
-          onPress={navigateToDiaryDetail}>
-          <View style={styles.entryContent}>
-            <View style={styles.textContainer}>
-              <Text style={styles.title}>오늘 기분 최상이다.</Text>
-              <Text style={styles.description}>
-                우리 아이가 좋아하는 이유식도 만들고, 이웃집이랑 인 사도
-                나누었던 하루였다...
-              </Text>
-              <Text style={styles.date}>2024년 6월 2일</Text>
+        <View style={styles.entryContainer}>
+          <TouchableOpacity
+            style={styles.entryItem}
+            onPress={navigateToDiaryDetail}>
+            <View style={styles.entryContent}>
+              <View style={styles.textContainer}>
+                <Text style={styles.title}>오늘 기분 최상이다.</Text>
+                <Text style={styles.description}>
+                  우리 아이가 좋아하는 이유식도 만들고, 이웃집이랑 인 사도
+                  나누었던 하루였다...
+                </Text>
+                <Text style={styles.date}>2024년 6월 2일</Text>
+              </View>
+              <Image
+                source={require('../../assets/images/icons/diary1.png')}
+                style={styles.thumbnail}
+              />
             </View>
-            <Image
-              source={require('../../assets/images/icons/diary1.png')}
-              style={styles.thumbnail}
-            />
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.entryItem}
-          onPress={navigateToDiaryDetail}>
-          <View style={styles.entryContent}>
-            <View style={styles.textContainer}>
-              <Text style={styles.title}>오늘 기분 최상이다.</Text>
-              <Text style={styles.description}>
-                우리 아이가 좋아하는 이유식도 만들고, 이웃집이랑 인 사도
-                나누었던 하루였다...
-              </Text>
-              <Text style={styles.date}>2024년 6월 2일</Text>
-            </View>
-            <Image
-              source={require('../../assets/images/icons/diary1.png')}
-              style={styles.thumbnail}
-            />
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.entryItem}
-          onPress={navigateToDiaryDetail}>
-          <View style={styles.entryContent}>
-            <View style={styles.textContainer}>
-              <Text style={styles.title}>오늘 기분 최상이다.</Text>
-              <Text style={styles.description}>
-                우리 아이가 좋아하는 이유식도 만들고, 이웃집이랑 인 사도
-                나누었던 하루였다...
-              </Text>
-              <Text style={styles.date}>2024년 6월 2일</Text>
-            </View>
-            <Image
-              source={require('../../assets/images/icons/diary1.png')}
-              style={styles.thumbnail}
-            />
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    paddingTop: 10,
-    paddingHorizontal: 20,
-  },
   headerContainer: {
+    height: 45,
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
-  },
-  headerTitleContainer: {
-    flex: 1,
-    alignItems: 'center',
   },
   header: {
     fontFamily: 'SUITE',
@@ -111,41 +68,37 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: '#000000',
   },
-  subtitle: {
-    marginLeft: 10,
+  totalDiaryContainer: {
+    marginTop: 20,
+    width: '90%',
+    height: 30,
+    textAlign: 'left',
+    flexDirection: 'row',
+  },
+  totalDiaryCount: {
     fontFamily: 'SUITE',
     fontSize: 16,
     fontWeight: '400',
     color: '#000000',
-    marginTop: 10,
-    marginBottom: 10,
   },
-  writeButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    marginBottom: 10,
-  },
+  writeButton: {width: '90%', height: 20, marginTop: 20},
   buttonText: {
-    fontFamily: 'SUITE',
     fontSize: 14,
     fontWeight: '400',
-    color: '#707070 ',
+    color: '#a6a6a6',
+    textAlign: 'right',
   },
-  entryContainer: {
-    marginTop: 10,
-    textAlign: 'center',
-  },
+  entryContainer: {width: '90%', marginTop: 20, textAlign: 'center'},
   entryItem: {
     width: '100%',
-    height: 110,
+    height: 120,
     borderRadius: 10,
     marginBottom: 15,
     backgroundColor: '#FFFFFF',
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
     elevation: 5,
   },
   entryContent: {

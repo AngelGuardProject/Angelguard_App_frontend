@@ -16,35 +16,39 @@ const TabNavi = () => {
         tabBarActiveTintColor: '#666662',
         tabBarInactiveTintColor: '#d9d9d9',
         tabBarStyle: {
-          borderTopWidth: 0,
+          borderTopWidth: 0, // Removes the border at the top
           backgroundColor: '#FFFFFF',
           height: 56,
-        } as ViewStyle, // Ensure correct typing for tabBarStyle
+          elevation: 0, // Removes shadow on Android
+          shadowOffset: {width: 0, height: 0}, // Removes shadow on iOS
+          shadowOpacity: 0, // Removes shadow opacity on iOS
+          shadowRadius: 0, // Removes shadow radius on iOS
+        } as ViewStyle,
         tabBarIconStyle: {
           marginTop: 5,
-        } as ViewStyle, // Ensure correct typing for tabBarIconStyle
+        } as ViewStyle,
         tabBarLabelStyle: {
           fontFamily: 'NotoSansKR-Regular',
           marginBottom: 5,
           fontSize: 10,
-        } as TextStyle, // Ensure correct typing for tabBarLabelStyle
+        } as TextStyle,
         tabBarIcon: ({focused}) => {
           let iconSource;
 
           if (route.name === 'Home') {
             iconSource = focused
-              ? require('../assets/images/icons/Home.png')
-              : require('../assets/images/icons/Home_un.png');
+              ? require('../assets/images/icons/TabNavi/Home.png')
+              : require('../assets/images/icons/TabNavi/Home_un.png');
           } else if (route.name === 'Controller') {
-            iconSource = require('../assets/images/icons/Mobile.png');
+            iconSource = require('../assets/images/icons/TabNavi/Mobile.png');
           } else if (route.name === 'Scheduler') {
             iconSource = focused
-              ? require('../assets/images/icons/Scheduler.png')
-              : require('../assets/images/icons/Scheduler_un.png');
+              ? require('../assets/images/icons/TabNavi/Scheduler.png')
+              : require('../assets/images/icons/TabNavi/Scheduler_un.png');
           } else if (route.name === 'Diary') {
             iconSource = focused
-              ? require('../assets/images/icons/Diary.png')
-              : require('../assets/images/icons/Diary_un.png');
+              ? require('../assets/images/icons/TabNavi/Diary.png')
+              : require('../assets/images/icons/TabNavi/Diary_un.png');
           }
 
           return (
