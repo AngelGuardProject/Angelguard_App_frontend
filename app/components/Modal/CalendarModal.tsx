@@ -56,7 +56,6 @@ const CalendarModal: React.FC<CalendarModalProps> = ({
   // Format date function
   const formatDate = (date: string, includeDayOfWeek: boolean = true) => {
     const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
       month: 'long',
       day: 'numeric',
     };
@@ -236,14 +235,14 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
   },
   dateContainer: {
-    paddingLeft: 10,
+    paddingLeft: 30,
     width: '100%',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around', // 변경
     marginBottom: 10,
   },
   dateInfo: {
-    marginRight: 20,
+    marginRight: 10,
     flex: 1,
   },
   label: {

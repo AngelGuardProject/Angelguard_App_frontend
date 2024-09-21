@@ -184,6 +184,7 @@ const styles = StyleSheet.create({
     color: '#a6a6a6',
     textAlign: 'center',
     marginTop: 20,
+    fontWeight: '400',
   },
 });
 
