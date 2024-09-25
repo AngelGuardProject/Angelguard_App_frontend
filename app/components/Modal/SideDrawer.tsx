@@ -7,7 +7,10 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-const SideDrawer = () => {
+interface PropsType {
+  navigation: {navigate: (name: string) => void};
+}
+const SideDrawer = ({navigation}: PropsType) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profile}>
@@ -26,14 +29,18 @@ const SideDrawer = () => {
       </View>
       <View style={styles.line}></View>
       <View style={styles.list}>
-        <TouchableOpacity style={styles.item}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('MyInfo')}
+          style={styles.item}>
           <Image
             style={styles.icon}
             source={require('../../assets/images/icons/Person.png')}
           />
           <Text style={styles.listText}>내 정보 보기</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.item}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('BabyList')}
+          style={styles.item}>
           <Image
             source={require('../../assets/images/icons/Baby.png')}
             style={styles.icon}

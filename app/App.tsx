@@ -16,6 +16,7 @@ import DrawerNavigator from './DrawerNavigator';
 import MyInfo from './screens/Information/MyInfo';
 import BabyInfo from './screens/Information/BabyInfo';
 import {HeaderLeft, HeaderRight} from './components/Header/MainHeader';
+import BabyList from './screens/Information/BabyList';
 
 const Stack = createStackNavigator();
 
@@ -101,11 +102,80 @@ function App() {
           }}
         />
         <Stack.Screen
+          name="BabyList"
+          component={BabyList}
+          options={{
+            headerShown: true,
+            title: '아이 정보',
+            headerTitleAlign: 'left',
+            headerStyle: {
+              height: 45,
+            },
+            headerTintColor: 'black',
+            headerTitleStyle: {
+              fontSize: 14,
+              fontWeight: 'regular',
+            },
+            headerLeft: ({onPress}) => (
+              <TouchableOpacity onPress={onPress}>
+                <Image
+                  style={{width: 9, height: 17, marginLeft: 24}}
+                  source={require('../app/assets/images/icons/LeftArrow.png')}
+                />
+              </TouchableOpacity>
+            ),
+          }}
+        />
+        <Stack.Screen
           name="MyInfo"
           component={MyInfo}
-          options={{headerShown: true}}
+          options={{
+            headerShown: true,
+            title: '내 정보',
+            headerTitleAlign: 'left',
+            headerStyle: {
+              height: 45,
+            },
+            headerTintColor: 'black',
+            headerTitleStyle: {
+              fontSize: 14,
+              fontWeight: 'regular',
+            },
+            headerLeft: ({onPress}) => (
+              <TouchableOpacity onPress={onPress}>
+                <Image
+                  style={{width: 9, height: 17, marginLeft: 24}}
+                  source={require('../app/assets/images/icons/LeftArrow.png')}
+                />
+              </TouchableOpacity>
+            ),
+          }}
         />
-        <Stack.Screen name="BabyInfo" component={BabyInfo} />
+        <Stack.Screen
+          name="BabyInfo"
+          component={BabyInfo}
+          options={{
+            headerShown: true,
+            title: '아이 정보',
+            headerTitleAlign: 'left',
+            headerStyle: {
+              height: 45,
+            },
+            headerTintColor: 'black',
+            headerTitleStyle: {
+              fontSize: 14,
+              fontWeight: 'regular',
+            },
+            headerLeft: ({onPress}) => (
+              <TouchableOpacity onPress={onPress}>
+                <Image
+                  style={{width: 9, height: 17, marginLeft: 24}}
+                  source={require('../app/assets/images/icons/LeftArrow.png')}
+                />
+              </TouchableOpacity>
+            ),
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

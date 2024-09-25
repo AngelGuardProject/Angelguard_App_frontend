@@ -209,6 +209,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 15,
     marginBottom: 10,
+    marginTop: 10,
     width: '90%',
     fontWeight: 'regular',
     color: 'black',
@@ -220,9 +221,9 @@ const styles = StyleSheet.create({
     height: 235,
     borderRadius: 10,
     marginBottom: 11,
-    shadowOffset: {width: 0, height: 2}, // 그림자 오프셋
-    shadowOpacity: 0.2, // 그림자 투명도
-    shadowRadius: 3, // 그림자 반경
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
     elevation: 3,
   },
   end: {
@@ -231,9 +232,9 @@ const styles = StyleSheet.create({
     width: '90%',
     height: 168,
     borderRadius: 10,
-    shadowOffset: {width: 0, height: 2}, // 그림자 오프셋
-    shadowOpacity: 0.2, // 그림자 투명도
-    shadowRadius: 3, // 그림자 반경
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
     elevation: 3,
   },
   TouchInput: {

@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {ToastAndroid} from 'react-native';
 
@@ -12,8 +13,10 @@ export const LoginHandler = (
       user_login_id: id,
       pw: pw,
     })
-    .then(res => {
+    .then(async res => {
       if (res.status == 200) {
+        await AsyncStorage.setItem('token', res.data.token);
+        await AsyncStorage.setItem('id', res.data.data.user_login_id);
         navigation.navigate('Main');
       }
     })
