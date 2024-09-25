@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import {Calendar, LocaleConfig} from 'react-native-calendars';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import SchedulerModal from '../../components/SchedulerModal'; // 모달 컴포넌트 임포트
+import SchedulerMainModal from '../../components/Modal/SchedulerModalMain'; // 모달 컴포넌트 임포트
 
 // 한국어로 로케일 설정
 LocaleConfig.locales['kr'] = {
@@ -130,7 +130,7 @@ function SchedulerMain() {
             'stylesheet.calendar.main': {
               dayContainer: {
                 width: 40,
-                height: 67,
+                height: 80,
                 alignItems: 'center',
                 justifyContent: 'flex-start',
                 paddingBottom: 10,
@@ -138,12 +138,12 @@ function SchedulerMain() {
               dayText: {
                 fontSize: 15,
                 textAlign: 'center',
-                lineHeight: 20,
+                lineHeight: 30,
               },
             },
           }}
         />
-        <SchedulerModal
+        <SchedulerMainModal
           visible={modalVisible}
           onClose={() => setModalVisible(false)}
           selectedDate={selectedDate} // 선택된 날짜를 모달에 전달
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor: '#f4f4f4',
+    backgroundColor: 'white',
   },
   container: {
     marginTop: 10,

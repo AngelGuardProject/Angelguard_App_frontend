@@ -14,50 +14,52 @@ function Controller() {
   const navigation = useNavigation();
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>우리 아이 모빌 등록하기</Text>
-        <View style={styles.subTextContainer}>
-          <Text style={styles.subText}>
-            이곳에서 모빌을 등록하고, 모빌을 움직이고 아이에게 음성을 전달할 수
-            있어요.
-          </Text>
-        </View>
-      </View>
-      <View style={styles.connectContainer}>
-        <Text style={styles.connectTitle}>Baby Mobile Connect</Text>
-        <View style={styles.connectBox}>
-          <Text style={styles.connectStatus}>연결된 기기가 없습니다.</Text>
-          <View style={styles.connectButtonContainer}>
-            <TouchableOpacity
-              style={styles.connectButton}
-              // onPress={() => {
-              //  navigation.navigate('ConnectMobile');
-              // }}
-            >
-              <Text style={styles.connectButtonText}>Connect</Text>
-            </TouchableOpacity>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+      <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>우리 아이 모빌 등록하기</Text>
+          <View style={styles.subTextContainer}>
+            <Text style={styles.subText}>
+              이곳에서 모빌을 등록하고, 모빌을 움직이고 아이에게 음성을 전달할
+              수 있어요.
+            </Text>
           </View>
         </View>
-      </View>
-      <View style={styles.iconContainer}>
-        <View style={styles.iconBox}>
-          <Text style={styles.iconText}>Mobile</Text>
-          <TouchableOpacity style={styles.iconTouchable}>
-            <Image
-              style={styles.iconImage}
-              source={require('../../assets/images/icons/BabyMobile.png')}
-            />
-          </TouchableOpacity>
+        <View style={styles.connectContainer}>
+          <Text style={styles.connectTitle}>Baby Mobile Connect</Text>
+          <View style={styles.connectBox}>
+            <Text style={styles.connectStatus}>연결된 기기가 없습니다.</Text>
+            <View style={styles.connectButtonContainer}>
+              <TouchableOpacity
+                style={styles.connectButton}
+                // onPress={() => {
+                //  navigation.navigate('ConnectMobile');
+                // }}
+              >
+                <Text style={styles.connectButtonText}>Connect</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-        <View style={styles.iconBox}>
-          <Text style={styles.iconText}>Voice</Text>
-          <TouchableOpacity style={styles.iconTouchable}>
-            <Image
-              style={styles.iconImage}
-              source={require('../../assets/images/icons/microphone.png')}
-            />
-          </TouchableOpacity>
+        <View style={styles.iconContainer}>
+          <View style={styles.iconBox}>
+            <Text style={styles.iconText}>Mobile</Text>
+            <TouchableOpacity style={styles.iconTouchable}>
+              <Image
+                style={styles.iconImage}
+                source={require('../../assets/images/icons/BabyMobile.png')}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.iconBox}>
+            <Text style={styles.iconText}>Voice</Text>
+            <TouchableOpacity style={styles.iconTouchable}>
+              <Image
+                style={styles.iconImage}
+                source={require('../../assets/images/icons/microphone.png')}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </SafeAreaView>
@@ -66,12 +68,8 @@ function Controller() {
 //큰 폰에서 다시 켜보기
 const {width, height} = Dimensions.get('window');
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
-    backgroundColor: '#FFFFFF',
-  },
   header: {
+    width: '90%',
     marginTop: 30,
     marginBottom: 16,
   },
@@ -90,9 +88,7 @@ const styles = StyleSheet.create({
     color: '#666662',
     fontFamily: 'SUITE',
   },
-  connectContainer: {
-    marginBottom: 15,
-  },
+  connectContainer: {width: '90%', marginBottom: 15},
   connectTitle: {
     fontSize: 16,
     fontWeight: '400',
@@ -140,7 +136,7 @@ const styles = StyleSheet.create({
     fontFamily: 'SUITE',
   },
   iconContainer: {
-    width: '100%',
+    width: '90%',
     flexDirection: 'row',
     justifyContent: 'space-around',
   },

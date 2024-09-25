@@ -1,78 +1,81 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
+  View,
   TextInput,
   TouchableOpacity,
-  View,
   Image,
+  Keyboard,
+  Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {StackNavigationProp} from '@react-navigation/stack';
 
-// Define the navigation prop types
 type DiaryWriteNavigationProp = StackNavigationProp<any, any>;
 
 const DiaryWrite: React.FC<{navigation: DiaryWriteNavigationProp}> = ({
   navigation,
 }) => {
-  const currentDate = '6월 22일 수요일';
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      },
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-            source={require('../../assets/images/icons/back.png')}
-            style={styles.cancelIcon}
-          />
-        </TouchableOpacity>
-        {/* <View style={styles.headerTitleContainer}>
-          <Text style={styles.headerText}>{currentDate}</Text>
-        </View> */}
-        <TouchableOpacity>
-          <Text style={styles.headerButton}>완료</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.content}>
-        <View>
-          <Text style={styles.currentDate}>2024년 8월 24일 토요일</Text>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+      <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        <View style={styles.headerContainer}>
+          <TouchableOpacity style={styles.iconContainer}>
+            <Image
+              source={require('../../assets/images/icons/back.png')} // Replace with your icon path
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+          <Text style={styles.header}>육아일지</Text>
+          <TouchableOpacity style={styles.registerButton}>
+            <Text style={styles.registerText}>등록</Text>
+          </TouchableOpacity>
         </View>
-        <View>
-          <Text style={styles.contentTitle}>오늘의 하루는 어떠셨나요?</Text>
-        </View>
-        <View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.dateText}>2024년 8월 24일 토요일</Text>
+          <Text style={styles.questionText}>오늘의 하루는 어떠셨나요?</Text>
           <TextInput
-            style={styles.mainTextInput}
-            placeholder=" 오늘 하루를 제목으로 표현주세요 "
+            style={styles.titleInput}
+            placeholder="오늘 하루를 제목으로 표현주세요."
             placeholderTextColor="#666662"
-            multiline
           />
-        </View>
-        <View style={styles.depContainer}>
           <TextInput
-            style={[
-              styles.depInput,
-              {
-                height: 60,
-                paddingVertical: 10,
-                textAlignVertical: 'center',
-                fontWeight: '300',
-              },
-            ]}
-            placeholder="오늘도 소중한 하루, 아기의 모든 순간을 기록해보세요."
+            style={styles.depInput}
+            placeholder="오늘도 소중한 하루, 아기의 모든 순간을 기록해봐요!."
             placeholderTextColor="#666662"
           />
         </View>
-        <View style={styles.uploadTextBox}>
-          <Text style={styles.uploadText}>사진 업로드</Text>
-        </View>
-        <View>
-          <Image
-            source={require('../../assets/images/icons/PhotoPlus.png')}
-            style={styles.photoFrame}
-          />
+        <View style={styles.photoContainer}>
+          <TouchableOpacity>
+            <Image
+              source={require('../../assets/images/icons/camera.png')} // Replace with your camera icon path
+              style={styles.cameraIcon}
+            />
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
@@ -80,87 +83,88 @@ const DiaryWrite: React.FC<{navigation: DiaryWriteNavigationProp}> = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    paddingTop: 10,
-    paddingHorizontal: 25,
+  headerContainer: {
+    height: 45,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '90%',
+  },
+  iconContainer: {
+    width: 24,
+    height: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  icon: {
+    width: 15,
+    height: 15,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  headerTitleContainer: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  headerText: {
     fontFamily: 'SUITE',
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '400',
     color: '#000000',
   },
-  cancelIcon: {
-    width: 16,
-    height: 16,
+  registerButton: {
+    padding: 10,
   },
-  headerButton: {
+  registerText: {
     fontFamily: 'SUITE',
     fontSize: 16,
     fontWeight: '300',
-    color: '#666662',
+    color: '#a6a6a6',
   },
-  currentDate: {
+  inputContainer: {
+    width: '90%',
+    height: '80%',
+    marginTop: 30,
+  },
+  dateText: {
+    width: '100%',
+    fontFamily: 'SUITE',
     fontSize: 14,
     fontWeight: '400',
     color: '#000000',
-    marginBottom: 8,
+    marginBottom: 10,
   },
-  contentTitle: {
-    marginBottom: 30,
+  questionText: {
+    width: '100%',
+    fontFamily: 'SUITE',
     fontSize: 20,
-    color: '#000000',
     fontWeight: '700',
+    color: '#000000',
+    marginBottom: 10,
   },
-  content: {
-    flex: 1,
-    marginTop: 10,
-  },
-  mainTextInput: {
-    paddingBottom: 20,
-    marginBottom: 15,
-    height: 50,
-    fontSize: 14,
-    fontWeight: '300',
+  titleInput: {
+    width: '100%',
+    height: 70,
+    fontFamily: 'SUITE',
+    fontSize: 16,
     color: '#666662',
     borderBottomWidth: 1,
-    borderBottomColor: '#D9D9D9',
-  },
-  depContainer: {
-    height: '48%',
+    borderBottomColor: '#d9d9d9',
   },
   depInput: {
+    width: '100%',
+    marginTop: 10,
+    height: 70,
+    fontWeight: '300',
     fontFamily: 'SUITE',
     fontSize: 14,
-    fontWeight: '300',
     color: '#666662',
   },
-  uploadTextBox: {
-    marginBottom: 15,
+  photoContainer: {
+    padding: 10,
+    paddingLeft: 20,
+    borderTopColor: '#d5d5d5',
+    borderTopWidth: 0.8,
+    width: '100%',
+    height: '10%',
   },
-  uploadText: {
-    marginTop: 15,
-    fontSize: 16,
-    color: '#000000',
-    fontWeight: '700',
-    fontFamily: 'SUITE',
-    marginBottom: 5,
-  },
-  photoFrame: {
-    width: 70,
-    height: 70,
-    marginBottom: 29,
+  cameraIcon: {
+    width: 30,
+    height: 30,
   },
 });
 
