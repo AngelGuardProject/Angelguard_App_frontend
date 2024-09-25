@@ -1,3 +1,4 @@
+import {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   Text,
@@ -8,8 +9,15 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
+import {getMyInfo} from '../../api/myInfo.api';
 
 const MyInfo = () => {
+  const [name, setName] = useState('');
+  const [id, setId] = useState('');
+
+  useEffect(() => {
+    getMyInfo({setName, setId});
+  }, []);
   return (
     <View style={{flex: 1, backgroundColor: 'white', justifyContent: 'center'}}>
       <View>
@@ -26,7 +34,7 @@ const MyInfo = () => {
               <Text style={styles.text}>이름</Text>
               <TextInput
                 style={styles.input}
-                placeholder="예빈맘"
+                value={name}
                 placeholderTextColor={'#cfcfcf'}
               />
             </View>
@@ -34,7 +42,7 @@ const MyInfo = () => {
               <Text style={styles.text}>아이디</Text>
               <TextInput
                 style={styles.input}
-                placeholder="hyerim"
+                value={id}
                 placeholderTextColor={'#cfcfcf'}
               />
             </View>
@@ -42,9 +50,9 @@ const MyInfo = () => {
               <Text style={styles.text}>비밀번호</Text>
               <TextInput
                 style={styles.input}
-                placeholder="*********  "
+                placeholder="*********"
                 placeholderTextColor={'#cfcfcf'}
-                secureTextEntry
+                readOnly
               />
             </View>
           </View>
