@@ -15,14 +15,20 @@ const BabyList = ({navigation}: PropsType) => {
           onPress={() => navigation.navigate('BabyInfo')}>
           <Image
             style={styles.img}
-            source={require('../../assets/images/icons/Plus.png')}
+            source={require('../../assets/images/hamster.png')}
           />
           <View>
-            <Text style={{marginTop: 9}}>예빈이</Text>
-            <Text style={{marginTop: 5}}>12개월 여아</Text>
+            <Text style={{marginTop: 9, fontSize: 14, color: '#666662'}}>
+              예빈이
+            </Text>
+            <Text style={{marginTop: 5, fontSize: 12, color: '#a6a6a6'}}>
+              12개월 여아
+            </Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.item}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('BabyInfo')}
+          style={styles.item}>
           <Image
             style={styles.plus}
             source={require('../../assets/images/icons/Plus.png')}
@@ -50,10 +56,11 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   img: {
-    width: 24,
-    height: 24,
+    width: 28,
+    height: 28,
     marginRight: 10,
     marginTop: 15,
+    borderRadius: 14,
   },
 });
 

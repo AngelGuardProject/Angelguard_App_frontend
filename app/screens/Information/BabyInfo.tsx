@@ -11,7 +11,8 @@ import {TextInput} from 'react-native-gesture-handler';
 
 const BabyInfo = () => {
   return (
-    <View style={{flex: 1, backgroundColor: 'white', justifyContent: 'center'}}>
+    <SafeAreaView
+      style={{flex: 1, backgroundColor: 'white', justifyContent: 'center'}}>
       <View>
         <View>
           <Image
@@ -69,7 +70,7 @@ const BabyInfo = () => {
       <TouchableOpacity style={styles.wrapSaveBtn}>
         <Text style={styles.saveBtn}>저장하기</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 
