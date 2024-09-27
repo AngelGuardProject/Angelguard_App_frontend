@@ -13,6 +13,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import MainCarousel from '../components/Carousel/MainCarousel';
 import {HeaderLeft, HeaderRight} from '../components/Header/MainHeader';
 import SelectBabyModal from '../components/Modal/SelectBabyModal';
+import YoutubeIframe from 'react-native-youtube-iframe';
 
 type Props = {
   navigation: {
@@ -90,7 +91,14 @@ function Main({navigation}: Props) {
         />
 
         <Text style={styles.title}>우리 아기 한눈에 보기</Text>
-        <View style={styles.stream}></View>
+        <View style={styles.stream}>
+          <YoutubeIframe
+            width={353}
+            height={400}
+            play={true}
+            videoId="c6ujwBpQ-XI"
+          />
+        </View>
         <Text style={styles.title}>오늘의 수유시간, 유축량, 섭취량은?</Text>
         <View style={styles.end}>
           <TouchableOpacity
@@ -225,6 +233,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 3,
+    paddingTop: 20,
   },
   end: {
     backgroundColor: '#fff',

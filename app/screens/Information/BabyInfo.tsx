@@ -1,3 +1,5 @@
+import moment from 'moment';
+import {useState} from 'react';
 import {
   SafeAreaView,
   Text,
@@ -6,10 +8,21 @@ import {
   KeyboardAvoidingView,
   StyleSheet,
   TouchableOpacity,
+  Button,
+  TouchableOpacityBase,
 } from 'react-native';
+import DatePicker from 'react-native-date-picker';
 import {TextInput} from 'react-native-gesture-handler';
+import {addBaby} from '../../api/baby.api';
 
 const BabyInfo = () => {
+  const [name, setName] = useState<String>('');
+  const [sex, setSex] = useState<String>('female');
+  const [height, setHeight] = useState<String>('');
+  const [weight, setWeight] = useState<String>('');
+  const [birth, setBirth] = useState<String>('');
+  const [open, setOpen] = useState(false);
+
   return (
     <SafeAreaView
       style={{flex: 1, backgroundColor: 'white', justifyContent: 'center'}}>
@@ -28,23 +41,47 @@ const BabyInfo = () => {
                 style={styles.input}
                 placeholder="이름을 입력하세요."
                 placeholderTextColor={'#cfcfcf'}
+                onChangeText={setName}
               />
             </View>
             <View style={styles.form}>
               <Text style={styles.text}>아이 생년월일</Text>
-              <TextInput
+              <TouchableOpacity
                 style={styles.input}
-                placeholder="이름을 입력하세요."
-                placeholderTextColor={'#cfcfcf'}
+                onPress={() => setOpen(true)}>
+                <Text>{birth}</Text>
+              </TouchableOpacity>
+              <DatePicker
+                modal
+                open={open}
+                mode="date"
+                date={new Date()}
+                onConfirm={date => {
+                  const birth =
+                    date.getFullYear() +
+                    '-' +
+                    (date.getMonth() + 1) +
+                    '-' +
+                    date.getDate();
+                  setOpen(false);
+                  setBirth(birth);
+                }}
+                onCancel={() => {
+                  setOpen(false);
+                }}
               />
             </View>
             <View style={styles.form}>
               <Text style={styles.text}>아이 성별</Text>
               <View style={{flexDirection: 'row', width: '90%'}}>
-                <TouchableOpacity style={styles.ClickBtn}>
+                <TouchableOpacity
+                  onPress={() => setSex('female')}
+                  style={sex == 'female' ? styles.ClickBtn : styles.btn}>
                   <Text>여아</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.btn}>
+                <TouchableOpacity
+                  onPress={() => setSex('male')}
+                  style={sex == 'male' ? styles.ClickBtn : styles.btn}>
                   <Text>남아</Text>
                 </TouchableOpacity>
               </View>
@@ -55,11 +92,15 @@ const BabyInfo = () => {
                 <TextInput
                   style={styles.inputBody}
                   placeholderTextColor={'#cfcfcf'}
+                  keyboardType="number-pad"
+                  onChangeText={setWeight}
                 />
                 <Text style={styles.unit}>cm</Text>
                 <TextInput
                   style={styles.inputBody}
                   placeholderTextColor={'#cfcfcf'}
+                  keyboardType="number-pad"
+                  onChangeText={setHeight}
                 />
                 <Text style={styles.unit}>kg</Text>
               </View>
@@ -67,7 +108,11 @@ const BabyInfo = () => {
           </View>
         </KeyboardAvoidingView>
       </View>
-      <TouchableOpacity style={styles.wrapSaveBtn}>
+      <TouchableOpacity
+        onPress={() => {
+          addBaby({name, sex, height, weight, birth});
+        }}
+        style={styles.wrapSaveBtn}>
         <Text style={styles.saveBtn}>저장하기</Text>
       </TouchableOpacity>
     </SafeAreaView>

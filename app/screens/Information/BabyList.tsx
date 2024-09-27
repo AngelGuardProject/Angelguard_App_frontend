@@ -1,31 +1,41 @@
+import {useEffect, useState} from 'react';
 import {Image, SafeAreaView, StyleSheet, View, Text} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {getBabyInfo} from '../../api/baby.api';
 
 interface PropsType {
   navigation: {navigate: (name: string) => void};
 }
 
 const BabyList = ({navigation}: PropsType) => {
+  const [babies, setBabies] = useState<Baby[]>([]);
+  useEffect(() => {
+    getBabyInfo({setBabies});
+  }, []);
   return (
     <SafeAreaView
       style={{flex: 1, backgroundColor: 'white', alignItems: 'center'}}>
       <View style={{width: '90%'}}>
-        <TouchableOpacity
-          style={styles.item}
-          onPress={() => navigation.navigate('BabyInfo')}>
-          <Image
-            style={styles.img}
-            source={require('../../assets/images/hamster.png')}
-          />
-          <View>
-            <Text style={{marginTop: 9, fontSize: 14, color: '#666662'}}>
-              예빈이
-            </Text>
-            <Text style={{marginTop: 5, fontSize: 12, color: '#a6a6a6'}}>
-              12개월 여아
-            </Text>
-          </View>
-        </TouchableOpacity>
+        {babies.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.item}
+            onPress={() => navigation.navigate('BabyInfo')}>
+            <Image
+              style={styles.img}
+              source={require('../../assets/images/hamster.png')}
+            />
+            <View>
+              <Text style={{marginTop: 9, fontSize: 14, color: '#666662'}}>
+                {item.baby_name}
+              </Text>
+              <Text style={{marginTop: 5, fontSize: 12, color: '#a6a6a6'}}>
+                {item.baby_birth}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        ))}
+
         <TouchableOpacity
           onPress={() => navigation.navigate('BabyInfo')}
           style={styles.item}>
