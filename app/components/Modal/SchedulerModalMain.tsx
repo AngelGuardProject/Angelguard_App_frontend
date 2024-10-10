@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Modal,
   View,
@@ -9,6 +9,7 @@ import {
   Text,
 } from 'react-native';
 import SchedulerInputModal from '../Modal/SchedulerInputModal'; // SchedulerInputModal 컴포넌트 가져오기
+import axios from 'axios'; // axios for API calls
 
 interface SchedulerModalMainProps {
   visible: boolean;
@@ -35,6 +36,7 @@ const SchedulerModalMain: React.FC<SchedulerModalMainProps> = ({
   const [eventColor, setEventColor] = useState('#FF0000');
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
+  const [events, setEvents] = useState<any[]>([]); // State to store fetched events
 
   // 일정 추가 버튼 클릭 시 모달 열기
   const handleAddInputEvent = () => {
@@ -60,6 +62,30 @@ const SchedulerModalMain: React.FC<SchedulerModalMainProps> = ({
     onClose();
   };
 
+  // Fetch events for the selected date
+  const SchedulerShowHandler = async () => {
+    if (selectedDate) {
+      try {
+        const response = await axios.get(`/scheduler/${selectedDate}`);
+        if (response.data.result) {
+          setEvents(response.data.data); // Update state with fetched events
+        } else {
+          // Handle error or no events case
+          setEvents([]); // Clear events if not found
+        }
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      }
+    }
+  };
+
+  // Fetch events when the modal is opened and a date is selected
+  useEffect(() => {
+    if (visible && selectedDate) {
+      SchedulerShowHandler();
+    }
+  }, [visible, selectedDate]);
+
   return (
     <Modal
       animationType="fade"
@@ -79,28 +105,36 @@ const SchedulerModalMain: React.FC<SchedulerModalMainProps> = ({
           {!addingEvent ? (
             <TouchableWithoutFeedback>
               <View style={styles.modalContainer}>
-                {eventTitle ? (
-                  <View style={styles.infoContainer}>
-                    <View
-                      style={[styles.redSquare, {backgroundColor: eventColor}]}
-                    />
-                    <View style={styles.textContainer}>
-                      <Text style={styles.labelText}>{eventTitle}</Text>
-                      <Text style={styles.modalDateText}>
-                        {startDate && endDate
-                          ? `${formatDate(startDate)} ~ ${formatDate(endDate)}`
-                          : selectedDate
-                          ? formatDate(selectedDate)
-                          : ''}
-                      </Text>
+                {events.length > 0 ? (
+                  events.map(event => (
+                    <View key={event.scheduler_id} style={styles.infoContainer}>
+                      <View
+                        style={[
+                          styles.redSquare,
+                          {
+                            backgroundColor:
+                              event.scheduler_color || eventColor,
+                          },
+                        ]}
+                      />
+                      <View style={styles.textContainer}>
+                        <Text style={styles.labelText}>
+                          {event.scheduler_content}
+                        </Text>
+                        <Text style={styles.modalDateText}>
+                          {formatDate(event.scheduler_date)}
+                        </Text>
+                      </View>
+                      <Image
+                        source={require('../../assets/images/icons/trash_icon.png')}
+                        style={styles.trashIcon}
+                      />
                     </View>
-                    <Image
-                      source={require('../../assets/images/icons/trash_icon.png')}
-                      style={styles.trashIcon}
-                    />
-                  </View>
+                  ))
                 ) : (
-                  <View></View>
+                  <Text style={styles.noEventsText}>
+                    아직 일정이 비어있습니다.
+                  </Text>
                 )}
                 <TouchableOpacity onPress={handleAddInputEvent}>
                   <Text style={styles.plusModal}>+ 일정 추가하기</Text>
@@ -185,6 +219,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
     fontWeight: '400',
+  },
+  noEventsText: {
+    fontSize: 16,
+    color: '#A6A6A6',
+    textAlign: 'center',
+    marginTop: 20,
   },
 });
 

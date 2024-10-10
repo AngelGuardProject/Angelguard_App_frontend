@@ -10,7 +10,8 @@ import {
   TextInput,
 } from 'react-native';
 import CalendarModal from '../Modal/CalendarModal';
-import ColorPickerModal from '../Modal/ColorPickerModal'; // 색상 선택 모달 임포트
+import ColorPickerModal from '../Modal/ColorPickerModal'; // Color picker modal import
+import {ToastAndroid} from 'react-native'; // Import Toast for notifications
 
 interface SchedulerInputModalProps {
   visible: boolean;
@@ -23,7 +24,7 @@ interface SchedulerInputModalProps {
   selectedDate: string | null;
 }
 
-// 날짜 포맷 함수
+// Date formatting function
 const formatDate = (date: string) => {
   const options: Intl.DateTimeFormatOptions = {
     month: 'short',
@@ -33,7 +34,7 @@ const formatDate = (date: string) => {
   return new Date(date).toLocaleDateString('ko-KR', options);
 };
 
-// 날짜 범위를 포맷하는 함수
+// Date range formatting function
 const formatDateRange = (startDate: string, endDate: string) => {
   const formattedStartDate = formatDate(startDate);
   const formattedEndDate = formatDate(endDate);
@@ -45,12 +46,12 @@ const SchedulerInputModal: React.FC<SchedulerInputModalProps> = ({
   onClose,
   selectedDate,
 }) => {
-  const [showCalendar, setShowCalendar] = useState(false); // 캘린더 모달 표시
-  const [showColorPicker, setShowColorPicker] = useState(false); // 색상 선택 모달
-  const [color, setColor] = useState('#FF0000'); // 선택된 색상
-  const [eventTitle, setEventTitle] = useState(''); // 일정 제목
-  const [startDate, setStartDate] = useState<string | null>(null); // 시작  상태
-  const [endDate, setEndDate] = useState<string | null>(null); // 종료  상태
+  const [showCalendar, setShowCalendar] = useState(false); // Show calendar modal
+  const [showColorPicker, setShowColorPicker] = useState(false); // Show color picker modal
+  const [color, setColor] = useState('#FF0000'); // Selected color
+  const [eventTitle, setEventTitle] = useState(''); // Event title
+  const [startDate, setStartDate] = useState<string | null>(null); // Start date state
+  const [endDate, setEndDate] = useState<string | null>(null); // End date state
 
   const handleOpenCalendar = () => {
     setShowCalendar(true);
@@ -61,8 +62,8 @@ const SchedulerInputModal: React.FC<SchedulerInputModalProps> = ({
   };
 
   const handleDateSelect = (startDate: string, endDate: string) => {
-    setStartDate(startDate); // 시작 날짜
-    setEndDate(endDate); // 종료 날짜
+    setStartDate(startDate); // Set start date
+    setEndDate(endDate); // Set end date
     setShowCalendar(false);
   };
 
@@ -75,7 +76,7 @@ const SchedulerInputModal: React.FC<SchedulerInputModalProps> = ({
   };
 
   const handleColorSelect = (selectedColor: string) => {
-    setColor(selectedColor); // 색상 상태 업데이트
+    setColor(selectedColor); // Update color state
     setShowColorPicker(false);
   };
 
@@ -84,19 +85,27 @@ const SchedulerInputModal: React.FC<SchedulerInputModalProps> = ({
   };
 
   const handleSave = () => {
-    console.log(`Event Title: ${eventTitle}`);
-    console.log(
-      `Event Date: ${
-        startDate && endDate
-          ? formatDateRange(startDate, endDate)
-          : selectedDate
-          ? formatDate(selectedDate)
-          : ''
-      }`,
-    );
-    console.log(`Event Color: ${color}`);
+    if (!eventTitle) {
+      ToastAndroid.show('일정 제목을 입력해주세요.', ToastAndroid.SHORT);
+      return;
+    }
 
-    // 일정 세부정보 전달
+    const schedulerDate =
+      startDate && endDate
+        ? `${startDate} ~ ${endDate}`
+        : selectedDate
+        ? selectedDate
+        : '';
+
+    if (!schedulerDate) {
+      ToastAndroid.show('날짜를 선택해주세요.', ToastAndroid.SHORT);
+      return;
+    }
+
+    // Placeholder for save logic
+    console.log('Saving event:', {eventTitle, schedulerDate, color});
+
+    // Close the modal after saving
     onClose(eventTitle, color, startDate, endDate);
   };
 

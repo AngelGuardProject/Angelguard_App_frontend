@@ -95,7 +95,17 @@ const TabNavi = () => {
         component={Diary}
         options={{
           tabBarLabel: 'diary',
-          headerShown: false,
+          headerShown: true,
+          title: '육아일지',
+          headerTitleAlign: 'center',
+          headerStyle: {
+            height: 45,
+          },
+          headerTintColor: 'black',
+          headerTitleStyle: {
+            fontSize: 14,
+            fontWeight: 'regular',
+          },
         }}
       />
     </Tab.Navigator>

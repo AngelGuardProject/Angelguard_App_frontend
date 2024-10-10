@@ -1,69 +1,141 @@
-import React, {useState} from 'react';
-import {StyleSheet, Text, View, Image} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RouteProp} from '@react-navigation/native';
-import {HeaderLeft, HeaderRight} from '../../components/Header/MainHeader';
+import {StackScreenProps} from '@react-navigation/stack';
+import {getDiaryDetail} from '../../api/diary.api';
 import SelectBabyModal from '../../components/Modal/SelectBabyModal';
+import OptionsMenu from '../../components/OptionsMenus';
 
-type DiaryDetailProps = {
-  navigation: StackNavigationProp<any, any>;
-  route: RouteProp<any, any>;
-};
+type DiaryDetailProps = StackScreenProps<
+  {DiaryDetail: {babyBoardId: string}},
+  'DiaryDetail'
+>;
 
-const DiaryDetail: React.FC<DiaryDetailProps> = ({navigation}) => {
+interface DiaryDetailType {
+  baby_board_title: string;
+  baby_board_date: string;
+  baby_board_content: string;
+  baby_board_image?: string;
+}
+
+const DiaryDetail: React.FC<DiaryDetailProps> = ({navigation, route}) => {
+  const {babyBoardId} = route.params;
   const [modalVisible, setModalVisible] = useState(false);
+  const [diaryDetail, setDiaryDetail] = useState<DiaryDetailType | null>(null);
+  const [optionsMenuVisible, setOptionsMenuVisible] = useState(false);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${year}. ${month}. ${day}. ${hours}:${minutes}`;
+  };
+
+  const fetchDiaryDetail = async () => {
+    try {
+      const detail = await getDiaryDetail(babyBoardId);
+      setDiaryDetail(detail);
+    } catch (error) {
+      console.error('Failed to fetch diary detail:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDiaryDetail();
+  }, [babyBoardId]);
+
+  if (!diaryDetail) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#A6A6A6" />
+        <Text style={styles.loadingText}>Loading...</Text>
+      </View>
+    );
+  }
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-      <View style={{justifyContent: 'center', alignItems: 'center'}}>
-        <View style={styles.header}>
-          <HeaderLeft onPress={() => setModalVisible(true)} />
-          <HeaderRight />
-        </View>
-
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>9월 첫주 일기</Text>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.contentContainer}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.title}>{diaryDetail.baby_board_title}</Text>
           <View style={styles.dateContainer}>
-            <Text style={styles.date}>2024. 9. 13. 14:10</Text>
-            <Image
-              source={require('../../assets/images/icons/dotmenuBar.png')}
-              style={styles.icon}
-            />
+            <Text style={styles.date}>
+              {formatDate(diaryDetail.baby_board_date)}
+            </Text>
+            <TouchableOpacity
+              onPress={() => setOptionsMenuVisible(prev => !prev)}>
+              <Image
+                source={require('../../assets/images/icons/dotmenuBar.png')}
+                style={styles.icon}
+              />
+            </TouchableOpacity>
           </View>
         </View>
 
         <View style={styles.depContainer}>
-          <Text style={styles.depText}>가을이 오고있어요</Text>
-          <Image
-            source={require('../../assets/images/hamster.png')}
-            style={styles.hamsterImage}
-          />
+          <Text style={styles.depText}>{diaryDetail.baby_board_content}</Text>
+          {diaryDetail.baby_board_image && (
+            <Image
+              source={{
+                uri: `http://34.47.76.73:3000/${diaryDetail.baby_board_image}`,
+              }}
+              style={styles.hamsterImage}
+            />
+          )}
         </View>
       </View>
+
       <SelectBabyModal
         setModalVisible={setModalVisible}
         modalVisible={modalVisible}
+      />
+      <OptionsMenu
+        visible={optionsMenuVisible}
+        onClose={() => setOptionsMenuVisible(false)}
+        onEdit={(title, content, image) => {
+          setOptionsMenuVisible(false);
+        }}
+        onDelete={() => {
+          console.log('Delete tapped');
+          setOptionsMenuVisible(false);
+        }}
+        babyBoardId={babyBoardId}
+        title={diaryDetail.baby_board_title}
+        content={diaryDetail.baby_board_content}
+        image={
+          diaryDetail.baby_board_image
+            ? `http://34.47.76.73:3000/${diaryDetail.baby_board_image}`
+            : null
+        }
       />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  header: {
-    width: '90%',
-    height: 40,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 17,
-    marginTop: 10,
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
   },
-  titleContainer: {
+  contentContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+  },
+  headerContainer: {
     marginTop: 10,
     paddingTop: 15,
     width: '90%',
-    height: 70,
     borderBottomWidth: 1,
     borderBottomColor: '#D9D9D9',
     paddingBottom: 15,
@@ -89,8 +161,6 @@ const styles = StyleSheet.create({
     width: 15,
     height: 16,
   },
-
-  // New styles for depContainer
   depContainer: {
     width: '90%',
     marginTop: 21,
@@ -105,6 +175,15 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 310,
     resizeMode: 'cover',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 16,
+    color: '#A6A6A6',
   },
 });
 
