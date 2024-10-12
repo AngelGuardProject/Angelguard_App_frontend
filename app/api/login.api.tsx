@@ -9,7 +9,7 @@ export const LoginHandler = (
 ) => {
   console.log(id, pw);
   axios
-    .post('http://louk342.iptime.org:3000/user/login', {
+    .post('http://34.47.76.73:3000/user/login', {
       user_login_id: id,
       pw: pw,
     })
@@ -21,6 +21,7 @@ export const LoginHandler = (
       }
     })
     .catch(err => {
+      console.log(err);
       if (err.status == 405) {
         ToastAndroid.show('사용자를 찾을 수 없습니다.', ToastAndroid.SHORT);
       }

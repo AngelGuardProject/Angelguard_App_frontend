@@ -7,12 +7,22 @@ import {
   View,
 } from 'react-native';
 import {useCallback, useState} from 'react';
+import {AddAmount} from '../../api/amount.api';
 
 interface PropsType {
   navigation: {navigate: (name: string) => void};
 }
 
 const Amount = ({navigation}: PropsType) => {
+  const [amount, setAmount] = useState(0);
+
+  const plusAmount = (addAmount: number) => {
+    setAmount(amount + addAmount);
+  };
+
+  const onChangeAmount = useCallback((text: string) => {
+    setAmount(parseInt(text));
+  }, []);
   return (
     <SafeAreaView
       style={{
@@ -44,25 +54,50 @@ const Amount = ({navigation}: PropsType) => {
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <Text>유축량</Text>
         <View style={{flexDirection: 'row'}}>
-          <TextInput style={styles.input} />
+          <TextInput
+            style={styles.input}
+            value={amount.toString()}
+            onChangeText={onChangeAmount}
+            keyboardType="number-pad"
+          />
           <Text style={{marginTop: 30, marginLeft: 15}}>ml</Text>
         </View>
       </View>
       <View style={styles.addBtns}>
-        <TouchableOpacity style={styles.addBtn}>
+        <TouchableOpacity
+          onPress={() => {
+            plusAmount(5);
+          }}
+          style={styles.addBtn}>
           <Text style={styles.BtnText}>+5ml</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.addBtn}>
+        <TouchableOpacity
+          onPress={() => {
+            plusAmount(10);
+          }}
+          style={styles.addBtn}>
           <Text style={styles.BtnText}>+10ml</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.addBtn}>
+        <TouchableOpacity
+          onPress={() => {
+            plusAmount(50);
+          }}
+          style={styles.addBtn}>
           <Text style={styles.BtnText}>+50ml</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.addBtn}>
+        <TouchableOpacity
+          onPress={() => {
+            plusAmount(100);
+          }}
+          style={styles.addBtn}>
           <Text style={styles.BtnText}>+100ml</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.wrapSaveBtn}>
+      <TouchableOpacity
+        onPress={() => {
+          AddAmount(amount);
+        }}
+        style={styles.wrapSaveBtn}>
         <Text style={styles.saveBtn}>저장하기</Text>
       </TouchableOpacity>
     </SafeAreaView>
@@ -94,6 +129,9 @@ const styles = StyleSheet.create({
     width: 132,
     borderBottomWidth: 1,
     borderBottomColor: '#666662',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
   },
   wrapSaveBtn: {
     width: '90%',
