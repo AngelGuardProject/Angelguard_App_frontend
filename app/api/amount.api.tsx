@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 interface PropsType {
-  setAmount: (amount: string) => void;
+  setAmount: (babyInfo: {}) => void;
 }
 
 export const AddAmount = async (feedAmount: number) => {

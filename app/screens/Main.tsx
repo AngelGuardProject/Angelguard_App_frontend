@@ -33,11 +33,20 @@ function Main({navigation}: Props) {
 
   const isFocused = useIsFocused();
 
+  const compIntake = () => {
+    console.log(intake);
+  };
+
+  const compAmount = () => {
+    console.log(amount);
+  };
+
   useEffect(() => {
     // getTmp();
     GetAmount({setAmount});
     GetIntake({setIntake});
-    console.log(intake, amount);
+    compIntake();
+    compAmount();
   }, [isFocused]);
 
   // const getTmp = () => {
