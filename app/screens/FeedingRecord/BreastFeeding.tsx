@@ -1,3 +1,4 @@
+import {useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,8 +7,25 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import DatePicker from 'react-native-date-picker';
 
 const BreastFeeding = () => {
+  console.log(new Date());
+  const date = new Date();
+  const [startOpen, setStartOpen] = useState(false);
+  const [endOpen, setEndOpen] = useState(false);
+  const [startTime, setStartTime] = useState(
+    `${date.getHours()} : ${date.getMinutes()}`,
+  );
+  const [endTime, setEndTime] = useState(
+    `${date.getHours()} : ${date.getMinutes()}`,
+  );
+  const [pm, setPm] = useState<String>(
+    `${date.getHours() >= 12 ? '오후' : '오전'}`,
+  );
+  const [pm1, setPm1] = useState<String>(
+    `${date.getHours() >= 12 ? '오후' : '오전'}`,
+  );
   return (
     <SafeAreaView
       style={{
@@ -51,11 +69,32 @@ const BreastFeeding = () => {
               }}>
               시작시간
             </Text>
-            <View
+            <TouchableOpacity
+              onPress={() => setStartOpen(true)}
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={styles.bigText}>오후</Text>
-              <Text style={styles.bigText}>5:00</Text>
-            </View>
+              <Text style={styles.bigText}>{pm}</Text>
+              <Text style={styles.bigText}>{startTime}</Text>
+              <DatePicker
+                modal
+                open={startOpen}
+                mode="time"
+                date={new Date()}
+                onConfirm={time => {
+                  const startTime =
+                    time.getHours() +
+                    ':' +
+                    (time.getMinutes() < 10
+                      ? '0' + time.getMinutes()
+                      : time.getMinutes());
+                  setPm(time.getHours() >= 12 ? '오후' : '오전');
+                  setStartOpen(false);
+                  setStartTime(startTime);
+                }}
+                onCancel={() => {
+                  setStartOpen(false);
+                }}
+              />
+            </TouchableOpacity>
             <Text
               style={{
                 color: '#666662',
@@ -63,7 +102,12 @@ const BreastFeeding = () => {
                 fontWeight: 'regular',
                 marginTop: 5,
               }}>
-              2024년 9월 16일
+              {date.getFullYear() +
+                '년 ' +
+                (date.getMonth() + 1) +
+                '월 ' +
+                date.getDate() +
+                '일 '}
             </Text>
           </View>
           <View>
@@ -71,11 +115,32 @@ const BreastFeeding = () => {
               style={{fontSize: 11, fontWeight: 'regular', color: '#a6a6a6'}}>
               종료시간
             </Text>
-            <View
+            <TouchableOpacity
+              onPress={() => setEndOpen(true)}
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={styles.bigText}>오후</Text>
-              <Text style={styles.bigText}>5:00</Text>
-            </View>
+              <Text style={styles.bigText}>{pm1}</Text>
+              <Text style={styles.bigText}>{endTime}</Text>
+            </TouchableOpacity>
+            <DatePicker
+              modal
+              open={endOpen}
+              mode="time"
+              date={new Date()}
+              onConfirm={time => {
+                const endTime =
+                  time.getHours() +
+                  ':' +
+                  (time.getMinutes() < 10
+                    ? '0' + time.getMinutes()
+                    : time.getMinutes());
+                setPm1(time.getHours() >= 12 ? '오후' : '오전');
+                setEndOpen(false);
+                setEndTime(endTime);
+              }}
+              onCancel={() => {
+                setEndOpen(false);
+              }}
+            />
             <Text
               style={{
                 color: '#666662',
@@ -83,7 +148,12 @@ const BreastFeeding = () => {
                 fontWeight: 'regular',
                 marginTop: 5,
               }}>
-              2024년 9월 16일
+              {date.getFullYear() +
+                '년 ' +
+                (date.getMonth() + 1) +
+                '월 ' +
+                date.getDate() +
+                '일 '}
             </Text>
           </View>
         </View>

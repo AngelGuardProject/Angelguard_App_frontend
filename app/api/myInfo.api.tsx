@@ -11,7 +11,7 @@ export const getMyInfo = async ({setName, setId}: PropsType) => {
   const token = await AsyncStorage.getItem('token');
   console.log(id);
   axios
-    .get(`http://louk342.iptime.org:3000/user/myprofile/${id}`, {
+    .get(`http://34.47.76.73:3000/user/myprofile/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

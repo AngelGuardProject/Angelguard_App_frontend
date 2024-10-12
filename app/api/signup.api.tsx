@@ -8,7 +8,7 @@ export const SignUpHandler = (
   navigation: {navigate: (name: string) => void},
 ) => {
   axios
-    .post('http://louk342.iptime.org:3000/user/signUp', {
+    .post('http://34.47.76.73:3000/user/signUp', {
       username: username,
       user_login_id: user_login_id,
       pw: pw,
