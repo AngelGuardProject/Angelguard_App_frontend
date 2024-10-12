@@ -1,19 +1,18 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import {ToastAndroid} from 'react-native';
 
 interface PropsType {
-  setIntake: (intake: string) => void;
+  setAmount: (amount: string) => void;
 }
 
-export const IntakeHandler = async (amount: number) => {
-  console.log(amount);
+export const AddAmount = async (feedAmount: number) => {
   const token = await AsyncStorage.getItem('token');
+  console.log(feedAmount);
   axios
     .post(
-      'http://34.47.76.73:3000/eat/babyeating',
+      'http://34.47.76.73:3000/eat/pumping',
       {
-        amount: amount,
+        intake: feedAmount,
         baby_name: 'hayoung',
       },
       {
@@ -23,29 +22,24 @@ export const IntakeHandler = async (amount: number) => {
       },
     )
     .then(res => {
-      if (res.status == 200) {
-        console.log('성공');
-      }
+      console.log(res.data);
     })
     .catch(err => {
       console.log(err);
-      if (err.status == 403) {
-        ToastAndroid.show('입력에 실패했습니다.', ToastAndroid.SHORT);
-      }
     });
 };
 
-export const GetIntake = async ({setIntake}: PropsType) => {
+export const GetAmount = async ({setAmount}: PropsType) => {
   const token = await AsyncStorage.getItem('token');
   const baby_name = 'hayoung';
   axios
-    .get(`http://34.47.76.73:3000/eat/selecteat/${baby_name}`, {
+    .get(`http://34.47.76.73:3000/eat/selectpum/${baby_name}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
     .then(res => {
-      setIntake(res.data);
+      setAmount(res.data);
     })
     .catch(err => {
       console.log(err);

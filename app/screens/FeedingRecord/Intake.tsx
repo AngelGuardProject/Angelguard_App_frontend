@@ -14,11 +14,15 @@ interface PropsType {
 }
 
 const Intake = ({navigation}: PropsType) => {
-  const [amount, setAmount] = useState(0);
-  const baby = '최혜림';
+  const [intake, setIntake] = useState(0);
+  const baby = 'hayoung';
 
-  const onChangeAmount = useCallback((text: string) => {
-    setAmount(Number(text));
+  const plusAmount = (addAmount: number) => {
+    setIntake(intake + addAmount);
+  };
+
+  const onChangeIntake = useCallback((text: string) => {
+    setIntake(parseInt(text));
   }, []);
 
   return (
@@ -53,7 +57,8 @@ const Intake = ({navigation}: PropsType) => {
         <Text>섭취량</Text>
         <View style={{flexDirection: 'row'}}>
           <TextInput
-            onChangeText={onChangeAmount}
+            value={intake.toString()}
+            onChangeText={onChangeIntake}
             keyboardType="numeric"
             style={styles.input}
           />
@@ -61,23 +66,39 @@ const Intake = ({navigation}: PropsType) => {
         </View>
       </View>
       <View style={styles.addBtns}>
-        <TouchableOpacity style={styles.addBtn}>
+        <TouchableOpacity
+          onPress={() => {
+            plusAmount(5);
+          }}
+          style={styles.addBtn}>
           <Text style={styles.BtnText}>+5ml</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.addBtn}>
+        <TouchableOpacity
+          onPress={() => {
+            plusAmount(10);
+          }}
+          style={styles.addBtn}>
           <Text style={styles.BtnText}>+10ml</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.addBtn}>
+        <TouchableOpacity
+          onPress={() => {
+            plusAmount(50);
+          }}
+          style={styles.addBtn}>
           <Text style={styles.BtnText}>+50ml</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.addBtn}>
+        <TouchableOpacity
+          onPress={() => {
+            plusAmount(100);
+          }}
+          style={styles.addBtn}>
           <Text style={styles.BtnText}>+100ml</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity
         onPress={() => {
-          console.log(amount, baby);
-          IntakeHandler(amount, baby, navigation);
+          console.log(intake, baby);
+          IntakeHandler(intake);
         }}
         style={styles.wrapSaveBtn}>
         <Text style={styles.saveBtn}>저장하기</Text>

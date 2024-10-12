@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+
 interface PropsType {
   setBabies: (babies: Baby[]) => void;
 }
@@ -9,7 +10,7 @@ export const getBabyInfo = async ({setBabies}: PropsType) => {
   const token = await AsyncStorage.getItem('token');
 
   axios
-    .get(`http://louk342.iptime.org:3000/mypage/baby/${id}`, {
+    .get(`http://34.47.76.73:3000/mypage/baby/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -32,7 +33,7 @@ export const addBaby = async ({name, sex, height, weight, birth}: addBaby) => {
   const id = await AsyncStorage.getItem('id');
 
   axios
-    .post('http://louk342.iptime.org:3000/mypage/babycreate', {
+    .post('http://34.47.76.73:3000/mypage/babycreate', {
       user_login_id: id,
       baby_sex: sex,
       baby_birth: birth,

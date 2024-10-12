@@ -14,6 +14,8 @@ import MainCarousel from '../components/Carousel/MainCarousel';
 import {HeaderLeft, HeaderRight} from '../components/Header/MainHeader';
 import SelectBabyModal from '../components/Modal/SelectBabyModal';
 import YoutubeIframe from 'react-native-youtube-iframe';
+import {GetAmount} from '../api/amount.api';
+import {GetIntake} from '../api/intake.api';
 
 type Props = {
   navigation: {
@@ -26,11 +28,16 @@ function Main({navigation}: Props) {
   const [tmp, setTmp] = useState(null);
   const [hm, setHm] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [intake, setIntake] = useState({});
+  const [amount, setAmount] = useState({});
 
   const isFocused = useIsFocused();
 
   useEffect(() => {
     // getTmp();
+    GetAmount({setAmount});
+    GetIntake({setIntake});
+    console.log(intake, amount);
   }, [isFocused]);
 
   // const getTmp = () => {
