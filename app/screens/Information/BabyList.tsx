@@ -9,9 +9,11 @@ interface PropsType {
 
 const BabyList = ({navigation}: PropsType) => {
   const [babies, setBabies] = useState<Baby[]>([]);
+
   useEffect(() => {
     getBabyInfo({setBabies});
   }, []);
+
   return (
     <SafeAreaView
       style={{flex: 1, backgroundColor: 'white', alignItems: 'center'}}>
