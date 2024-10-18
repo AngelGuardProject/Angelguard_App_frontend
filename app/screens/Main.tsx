@@ -94,21 +94,21 @@ function Main({navigation}: Props) {
       time: currentTimeFormatted,
       day: '+103', // 아이 생일로 며칠째인지
       unit: '',
-      image: require('../assets/images/humidity.png'),
+      image: require('../assets/images/icons/MainCarousel/Baby.png'),
     },
     {
       date: currentDateFormatted,
       time: currentTimeFormatted,
       day: hm !== null ? `${hm}` : '-',
       unit: '%',
-      image: require('../assets/images/humidity.png'),
+      image: require('../assets/images/icons/MainCarousel/humidity.png'),
     },
     {
       date: currentDateFormatted,
       time: currentTimeFormatted,
       day: tmp !== null ? `${tmp}` : '-',
       unit: '°C',
-      image: require('../assets/images/humidity.png'),
+      image: require('../assets/images/icons/MainCarousel/Temp.png'),
     },
   ];
 
