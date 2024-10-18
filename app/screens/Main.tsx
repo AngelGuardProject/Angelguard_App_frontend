@@ -16,6 +16,41 @@ import SelectBabyModal from '../components/Modal/SelectBabyModal';
 import {VLCPlayer} from 'react-native-vlc-media-player';
 import {GetAmount} from '../api/amount.api';
 import {GetIntake} from '../api/intake.api';
+
+// 한국어로 반환
+const getKoreanDay = (dayNumber: number) => {
+  const days = [
+    '일요일',
+    '월요일',
+    '화요일',
+    '수요일',
+    '목요일',
+    '금요일',
+    '토요일',
+  ];
+  return days[dayNumber];
+};
+
+// 날짜를 원하는 형식으로 변환하는 함수
+const formatDate = (dateString: string | number | Date) => {
+  const date = new Date(dateString); // dateString을 Date 객체로 변환
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 월은 0부터 시작하므로 +1해야함...
+  const day = date.getDate().toString().padStart(2, '0');
+  const dayOfWeek = getKoreanDay(date.getDay()); // 요일 구하기
+  return `${year}.${month}.${day} (${dayOfWeek})`;
+};
+
+// 현재 시간을 한국어 형식으로 반환함~~~
+const formatTime = () => {
+  const now = new Date();
+  const hours = now.getHours();
+  const minutes = now.getMinutes().toString().padStart(2, '0');
+  const period = hours >= 12 ? '오후' : '오전';
+  const formattedHours = hours % 12 || 12; // 12시간 형식으로 변환
+  return `${period} ${formattedHours}시 ${minutes}분`;
+};
+
 type Props = {
   navigation: {
     openDrawer(): void;
@@ -29,62 +64,50 @@ function Main({navigation}: Props) {
   const [modalVisible, setModalVisible] = useState(false);
   const [intake, setIntake] = useState({});
   const [amount, setAmount] = useState({});
-
   const isFocused = useIsFocused();
 
-  const compIntake = () => {
-    console.log(intake);
-  };
-
-  const compAmount = () => {
-    console.log(amount);
-  };
-
   useEffect(() => {
-    // getTmp();
+    getTmp();
     GetAmount({setAmount});
     GetIntake({setIntake});
-    compIntake();
-    compAmount();
   }, [isFocused]);
 
-  // const getTmp = () => {
-  //   axios
-  //     .get('http://louk342.iptime.org:3010/data?uuid=0')
-  //     .then(res => {
-  //       console.log(res.data);
-  //       setTmp(res.data.temp);
-  //       setHm(res.data.hm);
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //     });
-  // };
+  const getTmp = () => {
+    axios
+      .get('http://louk342.iptime.org:3010/data?uuid=0')
+      .then(res => {
+        console.log('온습도 조회 데이터 : ', res.data);
+        setTmp(res.data.temp);
+        setHm(res.data.humidity);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
 
-  setInterval(() => {
-    // getTmp();
-  }, 1000);
+  const currentDateFormatted = formatDate(new Date());
+  const currentTimeFormatted = formatTime();
 
   const pages = [
     {
-      date: '2024.09.16 (월요일)',
-      time: '오후 2시 33분',
-      day: '+103',
+      date: currentDateFormatted,
+      time: currentTimeFormatted,
+      day: '+103', // 아이 생일로 며칠째인지
       unit: '',
       image: require('../assets/images/humidity.png'),
     },
     {
-      date: '2024.09.16 (월요일)',
-      time: '오후 2시 33분',
-      day: '31',
+      date: currentDateFormatted,
+      time: currentTimeFormatted,
+      day: hm !== null ? `${hm}` : '-',
       unit: '%',
       image: require('../assets/images/humidity.png'),
     },
     {
-      date: '2024.09.16 (월요일)',
-      time: '오후 2시 33분',
-      day: '29',
-      unit: 'C',
+      date: currentDateFormatted,
+      time: currentTimeFormatted,
+      day: tmp !== null ? `${tmp}` : '-',
+      unit: '°C',
       image: require('../assets/images/humidity.png'),
     },
   ];
@@ -194,7 +217,6 @@ function Main({navigation}: Props) {
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   header: {
     width: '90%',
