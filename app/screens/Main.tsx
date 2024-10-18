@@ -25,11 +25,25 @@ function Main({navigation}: Props) {
   const [tmp, setTmp] = useState(null);
   const [hm, setHm] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [intake, setIntake] = useState({});
+  const [amount, setAmount] = useState({});
 
   const isFocused = useIsFocused();
 
+  const compIntake = () => {
+    console.log(intake);
+  };
+
+  const compAmount = () => {
+    console.log(amount);
+  };
+
   useEffect(() => {
     // getTmp();
+    GetAmount({setAmount});
+    GetIntake({setIntake});
+    compIntake();
+    compAmount();
   }, [isFocused]);
 
   // const getTmp = () => {
@@ -234,6 +248,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 3,
+    paddingTop: 20,
   },
   end: {
     backgroundColor: '#fff',
