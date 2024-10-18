@@ -22,23 +22,20 @@ export const createDiary = async (
 
   try {
     const user_login_id = await AsyncStorage.getItem('id');
-    console.log(user_login_id);
-
     if (user_login_id != null) {
       const formData = new FormData();
       formData.append('baby_board_title', title);
       formData.append('baby_board_content', content);
       formData.append('user_login_id', user_login_id);
-
-      // Check if selectedImage is valid and append it to the form data
       if (selectedImage) {
         formData.append('baby_board_image', {
-          uri: selectedImage.uri,
-          type: selectedImage.type,
-          name: selectedImage.fileName,
+          uri: selectedImage,
+          type: 'image/png',
+          name: 'image.png',
         });
+        console.log(selectedImage);
       }
-      console.log(selectedImage);
+
       const response = await fetch('http://34.47.76.73:3000/babyboard', {
         method: 'POST',
         headers: {
@@ -81,6 +78,7 @@ export const fetchDiaryList = async (pageNum: number) => {
 
     if (response.status === 200) {
       const result = await response.json();
+      console.log(result);
       return result;
     } else if (response.status === 400) {
       ToastAndroid.show(
@@ -90,7 +88,7 @@ export const fetchDiaryList = async (pageNum: number) => {
     } else if (response.status === 403) {
       ToastAndroid.show('일지 목록 조회에 실패했습니다.', ToastAndroid.SHORT);
     } else {
-      ToastAndroid.show('서버 오류가 발생했습니다.', ToastAndroid.SHORT);
+      ToastAndroid.show('아직 일기가 없습니다.', ToastAndroid.SHORT);
     }
   } catch (error) {
     console.error(error);

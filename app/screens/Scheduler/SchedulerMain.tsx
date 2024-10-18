@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   View,
@@ -9,8 +9,16 @@ import {
 import {Calendar, LocaleConfig} from 'react-native-calendars';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import SchedulerMainModal from '../../components/Modal/SchedulerModalMain'; // 모달 컴포넌트 임포트
+import axios from 'axios';
 
-// 한국어로 로케일 설정
+// Define the Event type
+interface Event {
+  scheduler_id: number;
+  scheduler_date: string; // Assume the date is in 'YYYY-MM-DD' format
+  scheduler_content: string; // 일정 내용 추가
+  scheduler_color: string; // 색상 추가
+}
+
 LocaleConfig.locales['kr'] = {
   monthNames: [
     '1월',
@@ -56,14 +64,64 @@ LocaleConfig.locales['kr'] = {
 LocaleConfig.defaultLocale = 'kr';
 
 function SchedulerMain() {
-  const today = new Date().toISOString().split('T')[0]; // 오늘 날짜를 'YYYY-MM-DD' 형식으로 설정
-  const [selectedDate, setSelectedDate] = useState<string | null>(null); // 선택된 날짜 상태
-  const [modalVisible, setModalVisible] = useState(false); // 모달 상태
+  const today = new Date().toISOString().split('T')[0];
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [events, setEvents] = useState<Event[]>([]);
 
-  // 날짜를 선택했을 때 호출되는 함수
-  const onDayPress = (day: any) => {
-    setSelectedDate(day.dateString); // 선택된 날짜 저장
-    setModalVisible(true); // 모달 표시
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const year = new Date().getFullYear();
+      const month = new Date().getMonth() + 1;
+      try {
+        const response = await axios.get(
+          `http://34.47.76.73:3000/scheduler/${year}/${month}`,
+        );
+        if (response.data && response.data.data) {
+          setEvents(response.data.data);
+        } else {
+          console.log('No events found');
+        }
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  const onDayPress = (day: {dateString: string}) => {
+    setSelectedDate(day.dateString);
+    setModalVisible(true);
+  };
+  const getMarkedDates = () => {
+    const markedDates: {[key: string]: any} = {};
+    events.forEach(event => {
+      const date = event.scheduler_date;
+
+      if (!markedDates[date]) {
+        markedDates[date] = {
+          dots: [{key: 'event', color: event.scheduler_color || 'blue'}],
+          customStyles: {
+            container: {
+              backgroundColor: 'transparent',
+            },
+            text: {
+              color: 'black',
+            },
+          },
+
+          eventContent: event.scheduler_content, // Event content for display
+        };
+      } else {
+        markedDates[date].dots.push({
+          key: 'event',
+          color: event.scheduler_color || 'blue',
+        });
+      }
+    });
+
+    return markedDates;
   };
 
   return (
@@ -80,7 +138,7 @@ function SchedulerMain() {
             </TouchableOpacity>
           )}
           firstDay={0}
-          onDayPress={onDayPress} // 날짜를 클릭했을 때 호출
+          onDayPress={onDayPress}
           markedDates={{
             [today]: {
               customStyles: {
@@ -93,15 +151,16 @@ function SchedulerMain() {
             [selectedDate || '']: {
               customStyles: {
                 container: {
-                  backgroundColor: '#FFF4D6', // 선택된 날짜의 배경색
+                  backgroundColor: '#FFF4D6',
                 },
                 text: {
                   color: 'black',
                 },
               },
             },
+            ...getMarkedDates(),
           }}
-          markingType={'custom'}
+          markingType={'multi-dot'}
           theme={{
             textDayFontFamily: 'SUITE',
             textMonthFontFamily: 'SUITE',
@@ -142,11 +201,51 @@ function SchedulerMain() {
               },
             },
           }}
+          // Custom render for each day
+          renderDay={(
+            date: {
+              dateString: any;
+              day:
+                | string
+                | number
+                | boolean
+                | React.ReactElement<
+                    any,
+                    string | React.JSXElementConstructor<any>
+                  >
+                | Iterable<React.ReactNode>
+                | React.ReactPortal
+                | null
+                | undefined;
+            },
+            state: string,
+          ) => {
+            const dateString = date.dateString;
+            const markedDate = getMarkedDates()[dateString];
+
+            return (
+              <View style={styles.dayContainer}>
+                <Text
+                  style={[
+                    styles.dayText,
+                    markedDate?.customStyles.text,
+                    state === 'today' && styles.todayText,
+                  ]}>
+                  {date.day}
+                </Text>
+                {markedDate && markedDate.eventContent ? (
+                  <Text style={styles.eventText}>
+                    {markedDate.eventContent}
+                  </Text>
+                ) : null}
+              </View>
+            );
+          }}
         />
         <SchedulerMainModal
           visible={modalVisible}
           onClose={() => setModalVisible(false)}
-          selectedDate={selectedDate} // 선택된 날짜를 모달에 전달
+          selectedDate={selectedDate}
         />
       </View>
     </SafeAreaView>
@@ -176,6 +275,24 @@ const styles = StyleSheet.create({
   arrowText: {
     fontSize: 30,
     color: '#808080',
+  },
+  dayContainer: {
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    height: 80,
+  },
+  dayText: {
+    fontSize: 15,
+    textAlign: 'center',
+    lineHeight: 30,
+  },
+  todayText: {
+    color: 'red',
+  },
+  eventText: {
+    fontSize: 12,
+    color: 'black',
+    textAlign: 'center',
   },
 });
 

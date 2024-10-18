@@ -69,7 +69,11 @@ const DiaryList: React.FC = () => {
                 </View>
                 {diary.baby_board_image && (
                   <Image
-                    source={{uri: diary.baby_board_image}}
+                    source={{
+                      uri: `http://34.47.76.73:3000/uploads/${diary.baby_board_image
+                        .split('/')
+                        .pop()}`,
+                    }}
                     style={styles.thumbnail}
                     onError={() =>
                       console.log('Image load failed', diary.baby_board_image)
@@ -157,9 +161,11 @@ const styles = StyleSheet.create({
     color: '#A6A6A6',
   },
   thumbnail: {
-    width: 80,
-    height: 80,
+    width: 100,
+    height: 100,
     marginLeft: 10,
+    borderRadius: 10,
+    overflow: 'hidden',
   },
 });
 

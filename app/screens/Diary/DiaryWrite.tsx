@@ -41,6 +41,7 @@ const DiaryWrite: React.FC<{
 
     try {
       if (diaryId) {
+        //diaryId 있을 때 (육아일지 수정시 )
         await updateDiary(
           diaryId,
           titleState,
@@ -50,6 +51,7 @@ const DiaryWrite: React.FC<{
         );
         navigation.navigate('DiaryDetail', {babyBoardId: diaryId});
       } else {
+        //diaryId 없을 때 (육아일지 생성시 )
         await createDiary(titleState, contentState, selectedImage, navigation);
       }
     } catch (error) {

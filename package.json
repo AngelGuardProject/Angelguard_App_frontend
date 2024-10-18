@@ -1,5 +1,5 @@
 {
-  "name": "Angelguard_App_frontend",
+  "name": "angelguard-app-frontend",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -26,6 +26,7 @@
     "react-native-reanimated": "^3.15.2",
     "react-native-safe-area-context": "^4.10.5",
     "react-native-screens": "^3.32.0",
+    "react-native-vlc-media-player": "^1.0.70",
     "reanimated-bottom-sheet": "^1.0.0-alpha.22"
   },
   "devDependencies": {
@@ -35,7 +36,7 @@
     "@react-native/babel-preset": "0.74.84",
     "@react-native/eslint-config": "0.74.84",
     "@react-native/metro-config": "0.74.84",
-    "@react-native/typescript-config": "0.74.84",
+    "@react-native/typescript-config": "^0.74.84",
     "@types/react": "^18.2.6",
     "@types/react-test-renderer": "^18.0.0",
     "babel-jest": "^29.6.3",

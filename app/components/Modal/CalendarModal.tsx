@@ -12,7 +12,7 @@ import {Calendar} from 'react-native-calendars';
 interface CalendarModalProps {
   visible: boolean;
   onClose: () => void;
-  onDateSelect: (startDate: string, endDate: string) => void; // 날짜 선택 시 처리 함수
+  onDateSelect: (date: string) => void;
 }
 
 const CalendarModal: React.FC<CalendarModalProps> = ({
@@ -20,63 +20,18 @@ const CalendarModal: React.FC<CalendarModalProps> = ({
   onClose,
   onDateSelect,
 }) => {
-  const [startDate, setStartDate] = useState<string | null>(null); // 시작 날짜
-  const [endDate, setEndDate] = useState<string | null>(null); // 종료 날짜
-
-  const getMarkedDatesBetween = (start: string, end: string) => {
-    const startDate = new Date(start);
-    const endDate = new Date(end);
-    const dates: {[key: string]: {color: string}} = {};
-
-    let currentDate = new Date(startDate);
-    while (currentDate <= endDate) {
-      const formattedDate = currentDate.toISOString().split('T')[0];
-      dates[formattedDate] = {color: '#FFF4D6'};
-      currentDate.setDate(currentDate.getDate() + 1);
-    }
-
-    return dates;
-  };
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
   const handleDayPress = (day: {dateString: string}) => {
-    if (!startDate || (startDate && endDate)) {
-      // 시작 날짜 선택
-      setStartDate(day.dateString);
-      setEndDate(null); // Clear the end date if it was selected
-    } else {
-      // 종료 날짜 선택
-      setEndDate(day.dateString);
-      if (startDate && endDate) {
-        onDateSelect(startDate, endDate); // Notify parent component of date selection
-        onClose();
-      }
+    setSelectedDate(day.dateString);
+  };
+
+  const handleOutsidePress = () => {
+    if (selectedDate) {
+      onDateSelect(selectedDate); // Apply the selected date
     }
+    onClose(); // Close the modal
   };
-
-  // Format date function
-  const formatDate = (date: string, includeDayOfWeek: boolean = true) => {
-    const options: Intl.DateTimeFormatOptions = {
-      month: 'long',
-      day: 'numeric',
-    };
-    const formattedDate = new Date(date).toLocaleDateString('ko-KR', options);
-
-    if (includeDayOfWeek) {
-      const dayOfWeek = new Date(date).toLocaleDateString('ko-KR', {
-        weekday: 'long',
-      });
-      return `${formattedDate} ${dayOfWeek}`;
-    }
-    return formattedDate;
-  };
-
-  // Extract day number from date string
-  const getDayNumber = (date: string) => {
-    return new Date(date).getDate(); // Extract the day of the month
-  };
-
-  // Get today's date
-  const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
 
   return (
     <Modal
@@ -87,110 +42,16 @@ const CalendarModal: React.FC<CalendarModalProps> = ({
       <TouchableOpacity
         style={styles.calendarModalBackground}
         activeOpacity={1}
-        onPressOut={onClose}>
+        onPressOut={handleOutsidePress}>
         <View style={styles.calendarContainer}>
-          <View style={styles.dateContainer}>
-            <View style={styles.dateInfo}>
-              <Text
-                style={[
-                  styles.label,
-                  startDate ? styles.selectedLabel : styles.unselectedLabel,
-                ]}>
-                시작
-              </Text>
-              <View style={styles.dateTextContainer}>
-                <Text
-                  style={[
-                    styles.dayNumber,
-                    startDate
-                      ? styles.selectedDayNumber
-                      : styles.unselectedDayNumber,
-                  ]}>
-                  {startDate ? getDayNumber(startDate) : getDayNumber(today)}
-                </Text>
-                <View style={styles.fullDateContainer}>
-                  <Text
-                    style={[
-                      styles.fullDate,
-                      startDate
-                        ? styles.selectedFullDate
-                        : styles.unselectedFullDate,
-                    ]}>
-                    {startDate
-                      ? formatDate(startDate, false)
-                      : formatDate(today, false)}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.dayOfWeek,
-                      startDate
-                        ? styles.selectedDayOfWeek
-                        : styles.unselectedDayOfWeek,
-                    ]}>
-                    {startDate
-                      ? ` ${
-                          formatDate(startDate, true).split(' ').slice(-1)[0]
-                        }`
-                      : formatDate(today, true).split(' ').slice(-1)[0]}
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <View style={styles.dateInfo}>
-              <Text
-                style={[
-                  styles.label,
-                  endDate ? styles.selectedLabel : styles.unselectedLabel,
-                ]}>
-                종료
-              </Text>
-              <View style={styles.dateTextContainer}>
-                <Text
-                  style={[
-                    styles.dayNumber,
-                    endDate
-                      ? styles.selectedDayNumber
-                      : styles.unselectedDayNumber,
-                  ]}>
-                  {endDate ? getDayNumber(endDate) : getDayNumber(today)}
-                </Text>
-                <View style={styles.fullDateContainer}>
-                  <Text
-                    style={[
-                      styles.fullDate,
-                      endDate
-                        ? styles.selectedFullDate
-                        : styles.unselectedFullDate,
-                    ]}>
-                    {endDate
-                      ? formatDate(endDate, false)
-                      : formatDate(today, false)}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.dayOfWeek,
-                      endDate
-                        ? styles.selectedDayOfWeek
-                        : styles.unselectedDayOfWeek,
-                    ]}>
-                    {endDate
-                      ? ` ${formatDate(endDate, true).split(' ').slice(-1)[0]}`
-                      : formatDate(today, true).split(' ').slice(-1)[0]}
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </View>
           <Calendar
             onDayPress={handleDayPress}
-            markingType={'period'}
             markedDates={{
-              [startDate!]: {startingDay: true, color: '#FFF4D6'},
-              ...(startDate &&
-                endDate && {
-                  ...getMarkedDatesBetween(startDate, endDate),
-                  [endDate!]: {endingDay: true, color: '#FFF4D6'},
-                }),
+              [selectedDate!]: {
+                selected: true,
+                selectedColor: '#FFF4D6',
+                selectedTextColor: 'red',
+              },
             }}
             style={styles.calendar}
           />
@@ -201,8 +62,8 @@ const CalendarModal: React.FC<CalendarModalProps> = ({
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                if (startDate && endDate) {
-                  onDateSelect(startDate, endDate);
+                if (selectedDate) {
+                  onDateSelect(selectedDate);
                   onClose();
                 }
               }}
@@ -221,78 +82,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.7)', // 어두운 배경
-  },
-  background: {
-    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
   },
   calendarContainer: {
-    width: '90%',
-    height: '60%',
+    width: '85%',
+    height: '50%',
     padding: 15,
     backgroundColor: 'white',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-  },
-  dateContainer: {
-    paddingLeft: 30,
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-around', // 변경
-    marginBottom: 10,
-  },
-  dateInfo: {
-    marginRight: 10,
-    flex: 1,
-  },
-  label: {
-    fontSize: 14,
-  },
-  dateTextContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 5,
-  },
-  dayNumber: {
-    fontSize: 30,
-    fontWeight: '600',
-  },
-  fullDateContainer: {
-    textAlign: 'left',
-    marginLeft: 10,
-  },
-  fullDate: {
-    fontSize: 12,
-    fontWeight: '400',
-  },
-  dayOfWeek: {
-    fontSize: 12,
-    fontWeight: '400',
-    marginTop: 5,
-  },
-  selectedDayNumber: {
-    color: '#007BFF',
-  },
-  unselectedDayNumber: {
-    color: '#A6A6A6',
-  },
-  selectedFullDate: {
-    color: '#007BFF',
-  },
-  selectedDayOfWeek: {
-    color: '#007BFF',
-  },
-  selectedLabel: {
-    color: '#007BFF',
-  },
-  unselectedDayOfWeek: {
-    color: '#A6A6A6',
-  },
-  unselectedLabel: {
-    color: '#A6A6A6',
-  },
-  unselectedFullDate: {
-    color: '#A6A6A6',
   },
   calendar: {
     height: '50%',
@@ -301,14 +99,15 @@ const styles = StyleSheet.create({
     padding: 10,
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    marginTop: 100,
+    marginTop: 150,
   },
   cancelButton: {
     marginRight: 20,
   },
   confirmButton: {},
   closeText: {
-    fontSize: 16,
+    fontWeight: '300',
+    fontSize: 15,
     color: '#007BFF',
   },
 });

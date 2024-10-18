@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Modal,
   View,
@@ -8,23 +8,27 @@ import {
   Image,
   Text,
   TextInput,
+  ToastAndroid,
+  KeyboardAvoidingView, // Import KeyboardAvoidingView
+  Platform, // Import Platform to determine the OS
 } from 'react-native';
 import CalendarModal from '../Modal/CalendarModal';
-import ColorPickerModal from '../Modal/ColorPickerModal'; // Color picker modal import
-import {ToastAndroid} from 'react-native'; // Import Toast for notifications
+import ColorPickerModal from '../Modal/ColorPickerModal';
+import {createScheduler, updateScheduler} from '../../api/calendar.api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface SchedulerInputModalProps {
   visible: boolean;
-  onClose: (
-    title: string,
-    color: string,
-    start: string | null,
-    end: string | null,
-  ) => void;
+  onClose: (title: string, color: string, date: string | null) => void;
   selectedDate: string | null;
+  event?: {
+    scheduler_content: string;
+    scheduler_color: string;
+    scheduler_date: string;
+    scheduler_id: string;
+  };
 }
 
-// Date formatting function
 const formatDate = (date: string) => {
   const options: Intl.DateTimeFormatOptions = {
     month: 'short',
@@ -34,24 +38,31 @@ const formatDate = (date: string) => {
   return new Date(date).toLocaleDateString('ko-KR', options);
 };
 
-// Date range formatting function
-const formatDateRange = (startDate: string, endDate: string) => {
-  const formattedStartDate = formatDate(startDate);
-  const formattedEndDate = formatDate(endDate);
-  return `${formattedStartDate} ~ ${formattedEndDate}`;
-};
-
 const SchedulerInputModal: React.FC<SchedulerInputModalProps> = ({
   visible,
   onClose,
   selectedDate,
+  event,
 }) => {
-  const [showCalendar, setShowCalendar] = useState(false); // Show calendar modal
-  const [showColorPicker, setShowColorPicker] = useState(false); // Show color picker modal
-  const [color, setColor] = useState('#FF0000'); // Selected color
-  const [eventTitle, setEventTitle] = useState(''); // Event title
-  const [startDate, setStartDate] = useState<string | null>(null); // Start date state
-  const [endDate, setEndDate] = useState<string | null>(null); // End date state
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [color, setColor] = useState('#FF0000');
+  const [eventTitle, setEventTitle] = useState('');
+  const [selectedDateState, setSelectedDateState] = useState<string | null>(
+    null,
+  );
+
+  useEffect(() => {
+    if (event) {
+      setEventTitle(event.scheduler_content);
+      setColor(event.scheduler_color);
+      setSelectedDateState(event.scheduler_date);
+    } else {
+      setEventTitle('');
+      setColor('#FF0000');
+      setSelectedDateState(selectedDate);
+    }
+  }, [event, selectedDate]);
 
   const handleOpenCalendar = () => {
     setShowCalendar(true);
@@ -61,9 +72,8 @@ const SchedulerInputModal: React.FC<SchedulerInputModalProps> = ({
     setShowCalendar(false);
   };
 
-  const handleDateSelect = (startDate: string, endDate: string) => {
-    setStartDate(startDate); // Set start date
-    setEndDate(endDate); // Set end date
+  const handleDateSelect = (date: string) => {
+    setSelectedDateState(date);
     setShowCalendar(false);
   };
 
@@ -76,45 +86,55 @@ const SchedulerInputModal: React.FC<SchedulerInputModalProps> = ({
   };
 
   const handleColorSelect = (selectedColor: string) => {
-    setColor(selectedColor); // Update color state
+    setColor(selectedColor);
     setShowColorPicker(false);
   };
 
   const handleCancel = () => {
-    onClose('', '', null, null);
+    onClose('', '', null);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!eventTitle) {
       ToastAndroid.show('일정 제목을 입력해주세요.', ToastAndroid.SHORT);
       return;
     }
 
-    const schedulerDate =
-      startDate && endDate
-        ? `${startDate} ~ ${endDate}`
-        : selectedDate
-        ? selectedDate
-        : '';
+    const schedulerDate = selectedDateState || selectedDate;
 
     if (!schedulerDate) {
       ToastAndroid.show('날짜를 선택해주세요.', ToastAndroid.SHORT);
       return;
     }
 
-    // Placeholder for save logic
-    console.log('Saving event:', {eventTitle, schedulerDate, color});
+    const userId = await AsyncStorage.getItem('id');
 
-    // Close the modal after saving
-    onClose(eventTitle, color, startDate, endDate);
+    if (!userId) {
+      ToastAndroid.show(
+        '사용자 ID를 가져오는 데 실패했습니다.',
+        ToastAndroid.SHORT,
+      );
+      return;
+    }
+
+    if (event) {
+      await updateScheduler(
+        event.scheduler_id,
+        eventTitle,
+        schedulerDate,
+        userId,
+        color,
+      );
+    } else {
+      await createScheduler(eventTitle, schedulerDate, color);
+    }
+
+    onClose(eventTitle, color, selectedDateState);
   };
 
-  const displayDate =
-    startDate && endDate
-      ? formatDateRange(startDate, endDate)
-      : selectedDate
-      ? formatDate(selectedDate)
-      : '날짜 선택';
+  const displayDate = selectedDateState
+    ? formatDate(selectedDateState)
+    : '날짜 선택';
 
   return (
     <Modal
@@ -126,7 +146,11 @@ const SchedulerInputModal: React.FC<SchedulerInputModalProps> = ({
         style={styles.modalBackground}
         activeOpacity={1}
         onPressOut={handleCancel}>
-        <View style={styles.modalWrapper}>
+        <KeyboardAvoidingView
+          style={styles.modalWrapper}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // Use padding for iOS
+          keyboardVerticalOffset={20} // Adjust this value as needed
+        >
           <View style={styles.dateContainer}>
             <Text style={styles.dateText}>{displayDate}</Text>
           </View>
@@ -170,14 +194,13 @@ const SchedulerInputModal: React.FC<SchedulerInputModalProps> = ({
                     </View>
                   </TouchableOpacity>
                 </View>
-
                 <TouchableOpacity onPress={handleOpenCalendar}>
                   <Text style={styles.dateTextSmall}>{displayDate}</Text>
                 </TouchableOpacity>
               </View>
             </View>
           </TouchableWithoutFeedback>
-        </View>
+        </KeyboardAvoidingView>
       </TouchableOpacity>
       <CalendarModal
         visible={showCalendar}
@@ -280,7 +303,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: 'white',
     textAlign: 'left',
-    marginBottom: 10,
   },
 });
 

@@ -45,6 +45,8 @@ const DiaryDetail: React.FC<DiaryDetailProps> = ({navigation, route}) => {
     try {
       const detail = await getDiaryDetail(babyBoardId);
       setDiaryDetail(detail);
+      console.log(detail);
+      console.log(detail.baby_board_image);
     } catch (error) {
       console.error('Failed to fetch diary detail:', error);
     }
@@ -87,8 +89,13 @@ const DiaryDetail: React.FC<DiaryDetailProps> = ({navigation, route}) => {
           {diaryDetail.baby_board_image && (
             <Image
               source={{
-                uri: `http://34.47.76.73:3000/${diaryDetail.baby_board_image}`,
+                uri: `http://34.47.76.73:3000/uploads/${diaryDetail.baby_board_image
+                  .split('/')
+                  .pop()}`, // Ensuring the URL is correctly formed
               }}
+              onError={() =>
+                console.log('Image load failed', diaryDetail.baby_board_image)
+              }
               style={styles.hamsterImage}
             />
           )}
@@ -172,9 +179,9 @@ const styles = StyleSheet.create({
     marginBottom: 21,
   },
   hamsterImage: {
+    overflow: 'hidden',
     width: '100%',
-    height: 310,
-    resizeMode: 'cover',
+    height: 300,
   },
   loadingContainer: {
     flex: 1,
