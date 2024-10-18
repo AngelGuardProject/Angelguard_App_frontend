@@ -14,6 +14,8 @@ import MainCarousel from '../components/Carousel/MainCarousel';
 import {HeaderLeft, HeaderRight} from '../components/Header/MainHeader';
 import SelectBabyModal from '../components/Modal/SelectBabyModal';
 import {VLCPlayer} from 'react-native-vlc-media-player';
+import {GetAmount} from '../api/amount.api';
+import {GetIntake} from '../api/intake.api';
 type Props = {
   navigation: {
     openDrawer(): void;
