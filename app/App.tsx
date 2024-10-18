@@ -4,7 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import DiaryWrite from './screens/Diary/DiaryWrite';
 import DiaryDetail from './screens/Diary/DiaryDetail';
-
+import DiaryList from './screens/Diary/DiaryList';
 import TabNavi from './components/TabNavi';
 import Login from './screens/Login';
 import SignUp from './screens/SignUp';
@@ -40,6 +40,24 @@ function App() {
           }}
         />
         <Stack.Screen
+          name="DiaryList"
+          component={DiaryList}
+          options={{
+            headerShown: true,
+            title: '육아일지',
+            headerTitleAlign: 'center',
+            headerStyle: {
+              height: 45,
+            },
+            headerTintColor: 'black',
+            headerTitleStyle: {
+              fontSize: 14,
+              fontWeight: 'regular',
+            },
+            headerLeft: () => null,
+          }}
+        />
+        <Stack.Screen
           name="DiaryWrite"
           component={DiaryWrite}
           options={{headerShown: false}}
@@ -47,9 +65,23 @@ function App() {
         <Stack.Screen
           name="DiaryDetail"
           component={DiaryDetail}
-          options={{headerShown: false}}
+          options={{
+            headerShown: true,
+            title: '육아일지',
+            headerTitleAlign: 'center',
+            headerStyle: {height: 45},
+            headerTintColor: 'black',
+            headerTitleStyle: {fontSize: 14, fontWeight: 'regular'},
+            headerLeft: ({onPress}) => (
+              <TouchableOpacity onPress={onPress}>
+                <Image
+                  style={{width: 9, height: 17, marginLeft: 24}}
+                  source={require('./assets/images/icons/LeftArrow.png')} // correct path
+                />
+              </TouchableOpacity>
+            ),
+          }}
         />
-
         <Stack.Screen
           name="Amount"
           component={Amount}

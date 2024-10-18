@@ -1,27 +1,50 @@
-import React from 'react';
-import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native'; // Import useFocusEffect
 import {StackNavigationProp} from '@react-navigation/stack';
-// Define the navigation prop types
+import {fetchDiaryList} from '../../api/diary.api';
+
 type DiaryListNavigationProp = StackNavigationProp<any, any>;
 
 const DiaryList: React.FC = () => {
   const navigation = useNavigation<DiaryListNavigationProp>();
+  const [diaries, setDiaries] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [pageNum, setPageNum] = useState(1);
 
-  const navigateToDiaryDetail = () => {
-    navigation.navigate('DiaryDetail');
+  const getDiaryList = async () => {
+    const data = await fetchDiaryList(pageNum);
+    if (data) {
+      setDiaries(data.contents);
+      setTotalCount(data.totalCount);
+    }
+  };
+
+  // Use useFocusEffect to refresh diary list when the screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      getDiaryList(); // Fetch diary list when focused
+    }, []),
+  );
+
+  const navigateToDiaryDetail = (babyBoardId: string) => {
+    console.log('Navigating to DiaryDetail with ID:', babyBoardId); // Debugging
+    navigation.navigate('DiaryDetail', {babyBoardId});
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-      <View style={{justifyContent: 'center', alignItems: 'center'}}>
-        <View style={styles.headerContainer}>
-          <Text style={styles.header}>육아일지</Text>
-        </View>
-
+    <SafeAreaView style={styles.container}>
+      <View style={styles.centeredView}>
         <View style={styles.totalDiaryContainer}>
-          <Text style={styles.totalDiaryCount}>전체일기 1</Text>
+          <Text style={styles.totalDiaryCount}>전체일기 {totalCount}</Text>
         </View>
 
         <TouchableOpacity
@@ -30,65 +53,75 @@ const DiaryList: React.FC = () => {
           <Text style={styles.buttonText}>작성하기</Text>
         </TouchableOpacity>
 
-        <View style={styles.entryContainer}>
-          <TouchableOpacity
-            style={styles.entryItem}
-            onPress={navigateToDiaryDetail}>
-            <View style={styles.entryContent}>
-              <View style={styles.textContainer}>
-                <Text style={styles.title}>오늘 기분 최상이다.</Text>
-                <Text style={styles.description}>
-                  우리 아이가 좋아하는 이유식도 만들고, 이웃집이랑 인 사도
-                  나누었던 하루였다...
-                </Text>
-                <Text style={styles.date}>2024년 6월 2일</Text>
+        <ScrollView style={styles.entryContainer}>
+          {diaries.map((diary: any) => (
+            <TouchableOpacity
+              key={diary.baby_board_id}
+              style={styles.entryItem}
+              onPress={() => navigateToDiaryDetail(diary.baby_board_id)}>
+              <View style={styles.entryContent}>
+                <View style={styles.textContainer}>
+                  <Text style={styles.title}>{diary.baby_board_title}</Text>
+                  <Text style={styles.description}>
+                    {diary.baby_board_content}
+                  </Text>
+                  <Text style={styles.date}>{diary.baby_board_date}</Text>
+                </View>
+                {diary.baby_board_image && (
+                  <Image
+                    source={{
+                      uri: `http://34.47.76.73:3000/uploads/${diary.baby_board_image
+                        .split('/')
+                        .pop()}`,
+                    }}
+                    style={styles.thumbnail}
+                    onError={() =>
+                      console.log('Image load failed', diary.baby_board_image)
+                    }
+                  />
+                )}
               </View>
-              <Image
-                source={require('../../assets/images/icons/diary1.png')}
-                style={styles.thumbnail}
-              />
-            </View>
-          </TouchableOpacity>
-        </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  headerContainer: {
-    height: 45,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
   },
-  header: {
-    fontFamily: 'SUITE',
-    fontSize: 16,
-    fontWeight: '400',
-    color: '#000000',
+  centeredView: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   totalDiaryContainer: {
     marginTop: 20,
     width: '90%',
-    height: 30,
-    textAlign: 'left',
-    flexDirection: 'row',
   },
   totalDiaryCount: {
-    fontFamily: 'SUITE',
     fontSize: 16,
     fontWeight: '400',
     color: '#000000',
   },
-  writeButton: {width: '90%', height: 20, marginTop: 20},
+  writeButton: {
+    width: '90%',
+    height: 20,
+    marginTop: 20,
+  },
   buttonText: {
     fontSize: 14,
     fontWeight: '400',
     color: '#a6a6a6',
     textAlign: 'right',
   },
-  entryContainer: {width: '90%', marginTop: 20, textAlign: 'center'},
+  entryContainer: {
+    width: '90%',
+    marginTop: 20,
+  },
   entryItem: {
     width: '100%',
     height: 120,
@@ -96,8 +129,8 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     backgroundColor: '#FFFFFF',
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.2,
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
     shadowRadius: 6,
     elevation: 5,
   },
@@ -110,7 +143,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontFamily: 'SUITE',
     fontSize: 16,
     fontWeight: '400',
     color: '#000000',
@@ -118,22 +150,22 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   description: {
-    fontFamily: 'SUITE',
     fontSize: 12,
     fontWeight: '400',
     color: '#666662',
-    marginBottom: 5,
+    marginBottom: 10,
   },
   date: {
-    fontFamily: 'SUITE',
     fontSize: 10,
     fontWeight: '400',
     color: '#A6A6A6',
   },
   thumbnail: {
-    width: 80,
-    height: 80,
+    width: 100,
+    height: 100,
     marginLeft: 10,
+    borderRadius: 10,
+    overflow: 'hidden',
   },
 });
 

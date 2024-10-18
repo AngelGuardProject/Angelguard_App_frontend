@@ -13,10 +13,9 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import MainCarousel from '../components/Carousel/MainCarousel';
 import {HeaderLeft, HeaderRight} from '../components/Header/MainHeader';
 import SelectBabyModal from '../components/Modal/SelectBabyModal';
-import YoutubeIframe from 'react-native-youtube-iframe';
+import {VLCPlayer} from 'react-native-vlc-media-player';
 import {GetAmount} from '../api/amount.api';
 import {GetIntake} from '../api/intake.api';
-
 type Props = {
   navigation: {
     openDrawer(): void;
@@ -108,11 +107,13 @@ function Main({navigation}: Props) {
 
         <Text style={styles.title}>우리 아기 한눈에 보기</Text>
         <View style={styles.stream}>
-          <YoutubeIframe
-            width={353}
-            height={400}
-            play={true}
-            videoId="c6ujwBpQ-XI"
+          <VLCPlayer
+            style={{width: '100%', height: '100%', borderRadius: 10}}
+            videoAspectRatio="16:9"
+            source={{uri: 'rtsp://louk342.iptime.org:8554/live.sdp'}}
+            onError={error => console.log('VLC 오류: ', error)}
+            onBuffering={buffering => console.log('버퍼링 중: ', buffering)}
+            onPlaying={() => console.log('재생 중...')}
           />
         </View>
         <Text style={styles.title}>오늘의 수유시간, 유축량, 섭취량은?</Text>

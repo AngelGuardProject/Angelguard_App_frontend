@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Modal,
   View,
@@ -7,13 +7,22 @@ import {
   TouchableWithoutFeedback,
   Image,
   Text,
+  ToastAndroid,
 } from 'react-native';
-import SchedulerInputModal from '../Modal/SchedulerInputModal'; // SchedulerInputModal 컴포넌트 가져오기
+import SchedulerInputModal from '../Modal/SchedulerInputModal';
+import {deleteEvent, fetchEventsForDate} from '../../api/calendar.api';
 
 interface SchedulerModalMainProps {
   visible: boolean;
   onClose: () => void;
   selectedDate: string | null;
+}
+
+interface EventType {
+  scheduler_id: string;
+  scheduler_content: string;
+  scheduler_color: string;
+  scheduler_date: string;
 }
 
 const formatDate = (date: string) => {
@@ -22,7 +31,7 @@ const formatDate = (date: string) => {
     day: 'numeric',
     weekday: 'long',
   };
-  return new Date(date).toLocaleDateString('ko-KR', options); // 날짜 포맷 설정
+  return new Date(date).toLocaleDateString('ko-KR', options);
 };
 
 const SchedulerModalMain: React.FC<SchedulerModalMainProps> = ({
@@ -31,34 +40,48 @@ const SchedulerModalMain: React.FC<SchedulerModalMainProps> = ({
   selectedDate,
 }) => {
   const [addingEvent, setAddingEvent] = useState(false);
-  const [eventTitle, setEventTitle] = useState('');
-  const [eventColor, setEventColor] = useState('#FF0000');
-  const [startDate, setStartDate] = useState<string | null>(null);
-  const [endDate, setEndDate] = useState<string | null>(null);
+  const [events, setEvents] = useState<EventType[]>([]);
+  const [editEvent, setEditEvent] = useState<EventType | null>(null);
 
-  // 일정 추가 버튼 클릭 시 모달 열기
   const handleAddInputEvent = () => {
+    setAddingEvent(true);
+    setEditEvent(null);
+  };
+
+  const handleEditEvent = (event: EventType) => {
+    setEditEvent(event); 
     setAddingEvent(true);
   };
 
-  // 입력 모달 닫기 및 상태 업데이트
-  const handleInputModalClose = (
-    title: string,
-    color: string,
-    start: string | null,
-    end: string | null,
-  ) => {
-    setEventTitle(title);
-    setEventColor(color);
-    setStartDate(start);
-    setEndDate(end);
+  const handleInputModalClose = (title: string, color: string) => {
+    loadEvents();
     setAddingEvent(false);
   };
 
-  // 모달 닫기
   const handleCancel = () => {
     onClose();
   };
+
+  const loadEvents = async () => {
+    if (visible && selectedDate) {
+      const result = await fetchEventsForDate(selectedDate);
+      setEvents(result?.success ? result.data : []);
+    }
+  };
+
+  const handleDeleteEvent = async (schedulerId: string) => {
+    try {
+      await deleteEvent(schedulerId);
+      setEvents(events.filter(event => event.scheduler_id !== schedulerId));
+      ToastAndroid.show('일정이 삭제되었습니다.', ToastAndroid.SHORT);
+    } catch (error) {
+      ToastAndroid.show('일정 삭제 실패', ToastAndroid.SHORT);
+    }
+  };
+
+  useEffect(() => {
+    loadEvents();
+  }, [visible, selectedDate]);
 
   return (
     <Modal
@@ -79,28 +102,43 @@ const SchedulerModalMain: React.FC<SchedulerModalMainProps> = ({
           {!addingEvent ? (
             <TouchableWithoutFeedback>
               <View style={styles.modalContainer}>
-                {eventTitle ? (
-                  <View style={styles.infoContainer}>
-                    <View
-                      style={[styles.redSquare, {backgroundColor: eventColor}]}
-                    />
-                    <View style={styles.textContainer}>
-                      <Text style={styles.labelText}>{eventTitle}</Text>
-                      <Text style={styles.modalDateText}>
-                        {startDate && endDate
-                          ? `${formatDate(startDate)} ~ ${formatDate(endDate)}`
-                          : selectedDate
-                          ? formatDate(selectedDate)
-                          : ''}
-                      </Text>
-                    </View>
-                    <Image
-                      source={require('../../assets/images/icons/trash_icon.png')}
-                      style={styles.trashIcon}
-                    />
-                  </View>
+                {events.length > 0 ? (
+                  events.map(event => (
+                    <TouchableOpacity
+                      key={event.scheduler_id}
+                      onPress={() => handleEditEvent(event)}>
+                      <View style={styles.infoContainer}>
+                        <View
+                          style={[
+                            styles.redSquare,
+                            {
+                              backgroundColor:
+                                event.scheduler_color || '#FF0000',
+                            },
+                          ]}
+                        />
+                        <View style={styles.textContainer}>
+                          <Text style={styles.labelText}>
+                            {event.scheduler_content}
+                          </Text>
+                          <Text style={styles.modalDateText}>
+                            {formatDate(event.scheduler_date)}
+                          </Text>
+                        </View>
+                        <TouchableOpacity
+                          onPress={() => handleDeleteEvent(event.scheduler_id)}>
+                          <Image
+                            source={require('../../assets/images/icons/trash_icon.png')}
+                            style={styles.trashIcon}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    </TouchableOpacity>
+                  ))
                 ) : (
-                  <View></View>
+                  <Text style={styles.noEventsText}>
+                    아직 일정이 비어있습니다.
+                  </Text>
                 )}
                 <TouchableOpacity onPress={handleAddInputEvent}>
                   <Text style={styles.plusModal}>+ 일정 추가하기</Text>
@@ -112,6 +150,7 @@ const SchedulerModalMain: React.FC<SchedulerModalMainProps> = ({
               visible={addingEvent}
               onClose={handleInputModalClose}
               selectedDate={selectedDate}
+              event={editEvent || undefined}
             />
           )}
         </View>
@@ -119,6 +158,7 @@ const SchedulerModalMain: React.FC<SchedulerModalMainProps> = ({
     </Modal>
   );
 };
+
 
 const styles = StyleSheet.create({
   modalBackground: {
@@ -159,9 +199,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   redSquare: {
-    width: 15,
-    height: 15,
+    width: 20,
+    height: 20,
     borderRadius: 3,
+    marginBottom: 12,
   },
   textContainer: {
     flex: 1,
@@ -169,22 +210,30 @@ const styles = StyleSheet.create({
   },
   labelText: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '400',
+    color: 'black',
   },
   modalDateText: {
-    fontSize: 13,
+    fontSize: 12,
+    fontWeight: '400',
     color: '#A6A6A6',
   },
   trashIcon: {
-    width: 20,
-    height: 20,
+    width: 25,
+    height: 25,
   },
   plusModal: {
     fontSize: 16,
     color: '#a6a6a6',
     textAlign: 'center',
+    marginTop: 10,
+    fontWeight: '300',
+  },
+  noEventsText: {
+    fontSize: 16,
+    color: '#A6A6A6',
+    textAlign: 'center',
     marginTop: 20,
-    fontWeight: '400',
   },
 });
 
