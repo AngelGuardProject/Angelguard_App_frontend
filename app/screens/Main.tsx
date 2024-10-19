@@ -16,6 +16,9 @@ import SelectBabyModal from '../components/Modal/SelectBabyModal';
 import {VLCPlayer} from 'react-native-vlc-media-player';
 import {GetAmount} from '../api/amount.api';
 import {GetIntake} from '../api/intake.api';
+import {getBabyInfo} from '../api/baby.api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {GetBreastFeeding} from '../api/breastFeeding';
 
 // 한국어로 반환
 const getKoreanDay = (dayNumber: number) => {
@@ -62,14 +65,52 @@ function Main({navigation}: Props) {
   const [tmp, setTmp] = useState(null);
   const [hm, setHm] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [intake, setIntake] = useState({});
-  const [amount, setAmount] = useState({});
+  const [intake, setIntake] = useState<getIntake>({
+    yesterday_amount: 0,
+    today_amount: 0,
+  });
+  const [amount, setAmount] = useState<getAmount>({
+    yesterday_intake: 0,
+    today_intake: 0,
+  });
+  const [babies, setBabies] = useState<Baby[]>();
+
   const isFocused = useIsFocused();
+
+  const compIntake = () => {
+    const comp = intake.yesterday_amount - intake.today_amount;
+    if (comp == 0) {
+      return '섭취량이 어제와 같습니다.';
+    }
+    if (comp > 0) {
+      return `어제보다 ${Math.abs(comp)}ml 덜 섭취했습니다.`;
+    }
+    if (comp < 0) {
+      return `어제보다 ${Math.abs(comp)}ml 더 섭취했습니다.`;
+    }
+  };
+
+  const compAmount = () => {
+    const comp = amount.yesterday_intake - amount.today_intake;
+    if (comp == 0) {
+      return '유축량이 어제와 같습니다.';
+    }
+    if (comp > 0) {
+      return `어제보다 ${Math.abs(comp)}ml 덜 유축했습니다.`;
+    }
+    if (comp < 0) {
+      return `어제보다 ${Math.abs(comp)}ml 더 유축했습니다.`;
+    }
+  };
 
   useEffect(() => {
     getTmp();
     GetAmount({setAmount});
     GetIntake({setIntake});
+    getBabyInfo({setBabies});
+    GetBreastFeeding();
+    compIntake();
+    compAmount();
   }, [isFocused]);
 
   const getTmp = () => {
@@ -173,9 +214,7 @@ function Main({navigation}: Props) {
                 style={styles.inputImage}
                 source={require('../assets/images/feedingBottle.png')}
               />
-              <Text style={styles.inputLeftText}>
-                어제보다 20ml 더 많이 유축했어요.
-              </Text>
+              <Text style={styles.inputLeftText}>{compAmount()}</Text>
             </View>
 
             <View style={styles.endRight}>
@@ -196,9 +235,7 @@ function Main({navigation}: Props) {
                 style={styles.inputImage}
                 source={require('../assets/images/baby.png')}
               />
-              <Text style={styles.inputLeftText}>
-                어제보다 50ml 더 많이 먹었어요.
-              </Text>
+              <Text style={styles.inputLeftText}>{compIntake()}</Text>
             </View>
             <View style={styles.endRight}>
               <Text style={styles.inputText}>입력하기</Text>

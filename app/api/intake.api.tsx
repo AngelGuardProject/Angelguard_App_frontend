@@ -3,7 +3,7 @@ import axios from 'axios';
 import {ToastAndroid} from 'react-native';
 
 interface PropsType {
-  setIntake: (babyInfo: {}) => void;
+  setIntake: (babyInfo: getIntake) => void;
 }
 
 export const IntakeHandler = async (amount: number) => {

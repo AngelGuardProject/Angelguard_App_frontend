@@ -14,9 +14,10 @@ import Intake from './screens/FeedingRecord/Intake';
 import {Image, Text, TouchableOpacity} from 'react-native';
 import DrawerNavigator from './DrawerNavigator';
 import MyInfo from './screens/Information/MyInfo';
-import BabyInfo from './screens/Information/BabyInfo';
+import BabyInfo from './screens/Information/BabyInfo/index';
 import {HeaderLeft, HeaderRight} from './components/Header/MainHeader';
 import BabyList from './screens/Information/BabyList';
+import AddBaby from './screens/Information/AddBaby';
 
 const Stack = createStackNavigator();
 
@@ -189,6 +190,31 @@ function App() {
           options={{
             headerShown: true,
             title: '아이 정보',
+            headerTitleAlign: 'left',
+            headerStyle: {
+              height: 45,
+            },
+            headerTintColor: 'black',
+            headerTitleStyle: {
+              fontSize: 14,
+              fontWeight: 'regular',
+            },
+            headerLeft: ({onPress}) => (
+              <TouchableOpacity onPress={onPress}>
+                <Image
+                  style={{width: 9, height: 17, marginLeft: 24}}
+                  source={require('../app/assets/images/icons/LeftArrow.png')}
+                />
+              </TouchableOpacity>
+            ),
+          }}
+        />
+        <Stack.Screen
+          name="AddBaby"
+          component={AddBaby}
+          options={{
+            headerShown: true,
+            title: '아이 추가',
             headerTitleAlign: 'left',
             headerStyle: {
               height: 45,

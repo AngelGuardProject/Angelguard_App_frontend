@@ -8,9 +8,9 @@ import {
   View,
 } from 'react-native';
 import DatePicker from 'react-native-date-picker';
+import {AddBreastFeeding} from '../../api/breastFeeding';
 
 const BreastFeeding = () => {
-  console.log(new Date());
   const date = new Date();
   const [startOpen, setStartOpen] = useState(false);
   const [endOpen, setEndOpen] = useState(false);
@@ -26,6 +26,15 @@ const BreastFeeding = () => {
   const [pm1, setPm1] = useState<String>(
     `${date.getHours() >= 12 ? '오후' : '오전'}`,
   );
+
+  const [sTime, setSTime] = useState<number>(0);
+  const [eTime, setETime] = useState<number>(0);
+
+  const compTime = () => {
+    const result = eTime - sTime;
+    AddBreastFeeding(result);
+  };
+
   return (
     <SafeAreaView
       style={{
@@ -80,6 +89,7 @@ const BreastFeeding = () => {
                 mode="time"
                 date={new Date()}
                 onConfirm={time => {
+                  setSTime(time.getHours() * 60 + time.getMinutes());
                   const startTime =
                     time.getHours() +
                     ':' +
@@ -127,6 +137,7 @@ const BreastFeeding = () => {
               mode="time"
               date={new Date()}
               onConfirm={time => {
+                setETime(time.getHours() * 60 + time.getMinutes());
                 const endTime =
                   time.getHours() +
                   ':' +
@@ -158,7 +169,7 @@ const BreastFeeding = () => {
           </View>
         </View>
       </View>
-      <TouchableOpacity style={styles.wrapSaveBtn}>
+      <TouchableOpacity onPress={compTime} style={styles.wrapSaveBtn}>
         <Text style={styles.saveBtn}>저장하기</Text>
       </TouchableOpacity>
     </SafeAreaView>

@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -9,9 +9,13 @@ import {
   Dimensions,
   PanResponder,
   Image,
+  TouchableOpacity,
 } from 'react-native';
+import {getBabyInfo} from '../../api/baby.api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SelectBabyModal = (props: any) => {
+  const [babies, setBabies] = useState<Baby[]>();
   const {modalVisible, setModalVisible} = props;
   const screenHeight = Dimensions.get('screen').height;
   const panY = useRef(new Animated.Value(screenHeight)).current;
@@ -31,6 +35,10 @@ const SelectBabyModal = (props: any) => {
     duration: 300,
     useNativeDriver: true,
   });
+
+  useEffect(() => {
+    getBabyInfo({setBabies});
+  }, []);
 
   const panResponders = useRef(
     PanResponder.create({
@@ -79,20 +87,16 @@ const SelectBabyModal = (props: any) => {
           {...panResponders.panHandlers}>
           <View style={styles.Bar}></View>
           <View style={styles.Wrap}>
-            <View style={styles.item}>
-              <Image
-                style={styles.img}
-                source={require('../../assets/images/hamster.png')}
-              />
-              <Text style={styles.text}>예빈이</Text>
-            </View>
-            <View style={styles.item}>
-              <Image
-                style={styles.img}
-                source={require('../../assets/images/hamster.png')}
-              />
-              <Text style={styles.text}>예빈이</Text>
-            </View>
+            {babies &&
+              babies.map(item => (
+                <TouchableOpacity style={styles.item}>
+                  <Image
+                    style={styles.img}
+                    source={require('../../assets/images/hamster.png')}
+                  />
+                  <Text style={styles.text}>{item.baby_name}</Text>
+                </TouchableOpacity>
+              ))}
             <View style={styles.itemEnd}>
               <Image
                 style={styles.img}
