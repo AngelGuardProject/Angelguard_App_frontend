@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 interface PropsType {
-  setBabies: (babies: Baby[]) => void;
+  setBabies: (babies: GetBabyInfo) => void;
 }
 
 export const getBabyInfo = async ({setBabies}: PropsType) => {

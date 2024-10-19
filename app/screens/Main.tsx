@@ -13,9 +13,11 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import MainCarousel from '../components/Carousel/MainCarousel';
 import {HeaderLeft, HeaderRight} from '../components/Header/MainHeader';
 import SelectBabyModal from '../components/Modal/SelectBabyModal';
-import YoutubeIframe from 'react-native-youtube-iframe';
 import {GetAmount} from '../api/amount.api';
 import {GetIntake} from '../api/intake.api';
+import {getBabyInfo} from '../api/baby.api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {GetBreastFeeding} from '../api/breastFeeding';
 
 type Props = {
   navigation: {
@@ -28,13 +30,20 @@ function Main({navigation}: Props) {
   const [tmp, setTmp] = useState(null);
   const [hm, setHm] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [intake, setIntake] = useState<getAmount>();
-  const [amount, setAmount] = useState<getIntake>();
+  const [intake, setIntake] = useState<getIntake>({
+    yesterday_amount: 0,
+    today_amount: 0,
+  });
+  const [amount, setAmount] = useState<getAmount>({
+    yesterday_intake: 0,
+    today_intake: 0,
+  });
+  const [babies, setBabies] = useState<Baby[]>();
 
   const isFocused = useIsFocused();
 
   const compIntake = () => {
-    const comp = intake?.yesterday_amount - intake?.today_amount;
+    const comp = intake.yesterday_amount - intake.today_amount;
     if (comp == 0) {
       return '섭취량이 어제와 같습니다.';
     }
@@ -47,7 +56,7 @@ function Main({navigation}: Props) {
   };
 
   const compAmount = () => {
-    const comp = amount?.yesterday_intake - amount?.today_intake;
+    const comp = amount.yesterday_intake - amount.today_intake;
     if (comp == 0) {
       return '유축량이 어제와 같습니다.';
     }
@@ -63,6 +72,8 @@ function Main({navigation}: Props) {
     // getTmp();
     GetAmount({setAmount});
     GetIntake({setIntake});
+    getBabyInfo({setBabies});
+    GetBreastFeeding();
     compIntake();
     compAmount();
   }, [isFocused]);
@@ -125,14 +136,7 @@ function Main({navigation}: Props) {
         />
 
         <Text style={styles.title}>우리 아기 한눈에 보기</Text>
-        <View style={styles.stream}>
-          <YoutubeIframe
-            width={353}
-            height={400}
-            play={true}
-            videoId="c6ujwBpQ-XI"
-          />
-        </View>
+        <View style={styles.stream}></View>
         <Text style={styles.title}>오늘의 수유시간, 유축량, 섭취량은?</Text>
         <View style={styles.end}>
           <TouchableOpacity

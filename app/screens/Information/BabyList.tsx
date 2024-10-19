@@ -2,9 +2,12 @@ import {useEffect, useState} from 'react';
 import {Image, SafeAreaView, StyleSheet, View, Text} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {getBabyInfo} from '../../api/baby.api';
+import {useNavigation} from '@react-navigation/native';
 
 interface PropsType {
-  navigation: {navigate: (name: string) => void};
+  navigation: {
+    navigate: (name: string, params?: object) => void;
+  };
 }
 
 const BabyList = ({navigation}: PropsType) => {
@@ -22,7 +25,10 @@ const BabyList = ({navigation}: PropsType) => {
           <TouchableOpacity
             key={index}
             style={styles.item}
-            onPress={() => navigation.navigate('BabyInfo')}>
+            onPress={() => {
+              console.log(item.baby_id);
+              navigation.navigate('BabyInfo', {itemId: item.baby_id});
+            }}>
             <Image
               style={styles.img}
               source={require('../../assets/images/hamster.png')}

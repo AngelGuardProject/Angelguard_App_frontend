@@ -1,4 +1,4 @@
 interface getAmount {
-  today_amount: number;
-  yesterday_amount: number;
+  today_intake: number;
+  yesterday_intake: number;
 }
