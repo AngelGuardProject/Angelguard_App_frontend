@@ -9,11 +9,12 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
-import {getMyInfo} from '../../api/myInfo.api';
+import {editMyInfo, getMyInfo} from '../../api/myInfo.api';
 
 const MyInfo = () => {
-  const [name, setName] = useState('');
-  const [id, setId] = useState('');
+  const [name, setName] = useState<string>('');
+  const [id, setId] = useState<string>('');
+  const [pw, setPw] = useState<string>('');
 
   useEffect(() => {
     getMyInfo({setName, setId});
@@ -36,6 +37,9 @@ const MyInfo = () => {
                 style={styles.input}
                 value={name}
                 placeholderTextColor={'#cfcfcf'}
+                onChangeText={name => {
+                  setName(name);
+                }}
               />
             </View>
             <View style={styles.form}>
@@ -52,13 +56,20 @@ const MyInfo = () => {
                 style={styles.input}
                 placeholder="*********"
                 placeholderTextColor={'#cfcfcf'}
-                readOnly
+                value={pw}
+                onChangeText={pw => {
+                  setPw(pw);
+                }}
               />
             </View>
           </View>
         </KeyboardAvoidingView>
       </View>
-      <TouchableOpacity style={styles.wrapSaveBtn}>
+      <TouchableOpacity
+        onPress={() => {
+          editMyInfo({pw, name, id});
+        }}
+        style={styles.wrapSaveBtn}>
         <Text style={styles.saveBtn}>수정하기</Text>
       </TouchableOpacity>
     </View>
