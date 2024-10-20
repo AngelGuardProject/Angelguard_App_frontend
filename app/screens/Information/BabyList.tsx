@@ -17,6 +17,16 @@ const BabyList = ({navigation}: PropsType) => {
     getBabyInfo({setBabies});
   }, []);
 
+  const formateDate = (date: string) => {
+    const formate = new Date(date);
+    const currentDate = new Date();
+
+    const birth = formate.getFullYear() * 12 + formate.getMonth();
+    const current = currentDate.getFullYear() * 12 + currentDate.getMonth();
+
+    return current - birth;
+  };
+
   return (
     <SafeAreaView
       style={{flex: 1, backgroundColor: 'white', alignItems: 'center'}}>
@@ -38,7 +48,7 @@ const BabyList = ({navigation}: PropsType) => {
                 {item.baby_name}
               </Text>
               <Text style={{marginTop: 5, fontSize: 12, color: '#a6a6a6'}}>
-                {item.baby_birth}
+                {formateDate(item.baby_birth)} 개월
               </Text>
             </View>
           </TouchableOpacity>
