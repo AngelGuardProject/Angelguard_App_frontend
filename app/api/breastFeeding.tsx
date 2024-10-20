@@ -25,18 +25,22 @@ export const AddBreastFeeding = async (time: number) => {
     });
 };
 
-export const GetBreastFeeding = async () => {
+interface PropsType {
+  setTime: (babInfo: GetTime) => void;
+}
+
+export const GetBreastFeeding = async ({setTime}: PropsType) => {
   const baby_name = 'hayoung';
   const token = await AsyncStorage.getItem('token');
 
   axios
-    .get(`http://34.47.76.73:3000/eat/select/${baby_name}`, {
+    .get(`http://34.47.76.73:3000/eat/selectms/${baby_name}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
     .then(res => {
-      console.log(res);
+      setTime(res.data);
     })
     .catch(err => {
       console.log(err);
