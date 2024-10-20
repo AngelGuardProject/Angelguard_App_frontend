@@ -73,7 +73,11 @@ function Main({navigation}: Props) {
     yesterday_intake: 0,
     today_intake: 0,
   });
-  const [babies, setBabies] = useState<Baby[]>();
+  const [time, setTime] = useState({
+    today_time: 0,
+    yesterday_time: 0,
+  });
+  const [babies, setBabies] = useState<Baby>();
 
   const isFocused = useIsFocused();
 
@@ -103,12 +107,25 @@ function Main({navigation}: Props) {
     }
   };
 
+  const compTime = () => {
+    const comp = time.yesterday_time - time.today_time;
+    if (comp == 0) {
+      return '수유시간이 어제와 동일합니다.';
+    }
+    if (comp > 0) {
+      return `어제보다 ${Math.abs(comp)}분 덜 수유했습니다.`;
+    }
+    if (comp < 0) {
+      return `어제보다 ${Math.abs(comp)}분 더 수유했습니다.`;
+    }
+  };
+
   useEffect(() => {
     getTmp();
     GetAmount({setAmount});
     GetIntake({setIntake});
     getBabyInfo({setBabies});
-    GetBreastFeeding();
+    GetBreastFeeding({setTime});
     compIntake();
     compAmount();
   }, [isFocused]);
@@ -192,9 +209,7 @@ function Main({navigation}: Props) {
                 style={styles.inputImage}
                 source={require('../assets/images/mom.png')}
               />
-              <Text style={styles.inputLeftText}>
-                어제보다 30분 빨리 수유했어요.
-              </Text>
+              <Text style={styles.inputLeftText}>{compTime()}</Text>
             </View>
             <View style={styles.endRight}>
               <Text style={styles.inputText}>입력하기</Text>
