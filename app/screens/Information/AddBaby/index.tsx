@@ -12,14 +12,16 @@ import {
 import DatePicker from 'react-native-date-picker';
 import {TextInput} from 'react-native-gesture-handler';
 import {addBaby} from '../../../api/baby.api';
+import {useNavigation} from '@react-navigation/native';
 
 const AddBaby = () => {
-  const [name, setName] = useState<String>('');
-  const [sex, setSex] = useState<String>('female');
-  const [height, setHeight] = useState<String>('');
-  const [weight, setWeight] = useState<String>('');
-  const [birth, setBirth] = useState<String>('');
+  const [name, setName] = useState<string>('');
+  const [sex, setSex] = useState<string>('female');
+  const [height, setHeight] = useState<number | null>(null); // Changed to number | null
+  const [weight, setWeight] = useState<number | null>(null); // Changed to number | null
+  const [birth, setBirth] = useState<string>('');
   const [open, setOpen] = useState(false);
+  const navigation = useNavigation();
 
   return (
     <SafeAreaView
@@ -28,11 +30,16 @@ const AddBaby = () => {
         <View>
           <Image
             style={styles.img}
-            source={require('../../../assets/images/hamster.png')}
+            source={
+              sex === 'female'
+                ? require('../../../assets/images/girl.png')
+                : require('../../../assets/images/boy.png')
+            }
           />
         </View>
         <KeyboardAvoidingView behavior={'height'}>
           <View style={styles.wrap}>
+            {/* 아이 이름 입력 */}
             <View style={styles.form}>
               <Text style={styles.text}>아이 이름</Text>
               <TextInput
@@ -42,6 +49,8 @@ const AddBaby = () => {
                 onChangeText={setName}
               />
             </View>
+
+            {/* 생년월일 선택 */}
             <View style={styles.form}>
               <Text style={styles.text}>아이 생년월일</Text>
               <TouchableOpacity
@@ -84,21 +93,25 @@ const AddBaby = () => {
                 </TouchableOpacity>
               </View>
             </View>
+
+            {/* 신체 정보 입력 */}
             <View style={styles.form}>
               <Text style={styles.text}>아이 신체정보</Text>
               <View style={{flexDirection: 'row', width: '90%'}}>
                 <TextInput
                   style={styles.inputBody}
+                  placeholder="키"
                   placeholderTextColor={'#cfcfcf'}
                   keyboardType="number-pad"
-                  onChangeText={setWeight}
+                  onChangeText={text => setHeight(Number(text) || null)} // Convert input to number
                 />
                 <Text style={styles.unit}>cm</Text>
                 <TextInput
                   style={styles.inputBody}
+                  placeholder="몸무게"
                   placeholderTextColor={'#cfcfcf'}
                   keyboardType="number-pad"
-                  onChangeText={setHeight}
+                  onChangeText={text => setWeight(Number(text) || null)} // Convert input to number
                 />
                 <Text style={styles.unit}>kg</Text>
               </View>
@@ -106,9 +119,10 @@ const AddBaby = () => {
           </View>
         </KeyboardAvoidingView>
       </View>
+
       <TouchableOpacity
         onPress={() => {
-          addBaby({name, sex, height, weight, birth});
+          addBaby({name, sex, height, weight, birth, navigation});
         }}
         style={styles.wrapSaveBtn}>
         <Text style={styles.saveBtn}>저장하기</Text>
@@ -118,12 +132,11 @@ const AddBaby = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {},
   img: {
     width: 112,
     height: 112,
     borderRadius: 62,
-    marginHorizontal: 'auto',
+    alignSelf: 'center',
     marginBottom: 23,
   },
   wrap: {
@@ -143,7 +156,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     fontWeight: 'regular',
-    color: '#66662',
+    color: '#666662',
     marginBottom: 13,
     width: '90%',
   },
@@ -181,7 +194,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF4D6',
     borderRadius: 10,
     marginTop: 35,
-    marginHorizontal: 'auto',
+    alignSelf: 'center',
   },
   saveBtn: {
     color: '#666662',

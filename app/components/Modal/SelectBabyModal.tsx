@@ -12,13 +12,18 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {getBabyInfo} from '../../api/baby.api';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SelectBabyModal = (props: any) => {
   const [babies, setBabies] = useState<Baby[]>();
-  const {modalVisible, setModalVisible} = props;
+  const {modalVisible, setModalVisible, onSelectBaby} = props;
   const screenHeight = Dimensions.get('screen').height;
   const panY = useRef(new Animated.Value(screenHeight)).current;
+  useEffect(() => {
+    if (modalVisible) {
+      resetBottomSheet.start();
+    }
+  }, [modalVisible]);
+
   const translateY = panY.interpolate({
     inputRange: [-1, 0, 1],
     outputRange: [0, 0, 1],
@@ -57,16 +62,15 @@ const SelectBabyModal = (props: any) => {
     }),
   ).current;
 
-  useEffect(() => {
-    if (props.modalVisible) {
-      resetBottomSheet.start();
-    }
-  }, [props.modalVisible]);
-
   const closeModal = () => {
     closeBottomSheet.start(() => {
       setModalVisible(false);
     });
+  };
+  const getBabyImage = (sex: string) => {
+    return sex === 'male'
+      ? require('../../assets/images/boy.png')
+      : require('../../assets/images/girl.png');
   };
 
   return (
@@ -89,10 +93,16 @@ const SelectBabyModal = (props: any) => {
           <View style={styles.Wrap}>
             {babies &&
               babies.map(item => (
-                <TouchableOpacity style={styles.item}>
+                <TouchableOpacity
+                  key={item.baby_id}
+                  style={styles.item}
+                  onPress={() => {
+                    onSelectBaby(item.baby_name);
+                    closeModal();
+                  }}>
                   <Image
                     style={styles.img}
-                    source={require('../../assets/images/hamster.png')}
+                    source={getBabyImage(item.baby_sex)}
                   />
                   <Text style={styles.text}>{item.baby_name}</Text>
                 </TouchableOpacity>

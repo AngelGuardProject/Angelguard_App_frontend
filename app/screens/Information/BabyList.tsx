@@ -27,6 +27,12 @@ const BabyList = ({navigation}: PropsType) => {
     return current - birth;
   };
 
+  const getBabyImage = (sex: string) => {
+    return sex === 'male'
+      ? require('../../assets/images/boy.png')
+      : require('../../assets/images/girl.png');
+  };
+
   return (
     <SafeAreaView
       style={{flex: 1, backgroundColor: 'white', alignItems: 'center'}}>
@@ -39,10 +45,7 @@ const BabyList = ({navigation}: PropsType) => {
               console.log(item.baby_id);
               navigation.navigate('BabyInfo', {itemId: item.baby_id});
             }}>
-            <Image
-              style={styles.img}
-              source={require('../../assets/images/hamster.png')}
-            />
+            <Image style={styles.img} source={getBabyImage(item.baby_sex)} />
             <View>
               <Text style={{marginTop: 9, fontSize: 14, color: '#666662'}}>
                 {item.baby_name}
@@ -55,7 +58,7 @@ const BabyList = ({navigation}: PropsType) => {
         ))}
 
         <TouchableOpacity
-          onPress={() => navigation.navigate('BabyInfo')}
+          onPress={() => navigation.navigate('AddBaby')}
           style={styles.item}>
           <Image
             style={styles.plus}

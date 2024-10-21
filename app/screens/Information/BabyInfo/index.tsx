@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import axios from 'axios'; // Ensure axios is imported if not already
 import moment from 'moment';
 import {useEffect, useState} from 'react';
 import {
@@ -8,34 +10,66 @@ import {
   KeyboardAvoidingView,
   StyleSheet,
   TouchableOpacity,
-  Button,
-  TouchableOpacityBase,
 } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import {TextInput} from 'react-native-gesture-handler';
-import {getBabyInfo} from '../../../api/baby.api';
+import {getBabyInfo, updateBaby} from '../../../api/baby.api';
 
-const BabyInfo = ({route}: any) => {
-  const [name, setName] = useState<String>();
-  const [sex, setSex] = useState<String>('female');
-  const [height, setHeight] = useState<String>('');
-  const [weight, setWeight] = useState<String>('');
-  const [birth, setBirth] = useState<String>('');
+interface Baby {
+  baby_id: number;
+  baby_name: string;
+  baby_sex: string;
+  baby_birth?: string;
+  baby_height?: number;
+  baby_weight?: number;
+  user_login_id?: string;
+}
+
+const BabyInfo = ({route, navigation}: any) => {
+  const [sex, setSex] = useState<string>('female');
+  const [birth, setBirth] = useState<string>(''); // State for birth
   const [open, setOpen] = useState(false);
-  const [babies, setBabies] = useState<Baby[]>();
+  const [baby, setBaby] = useState<Baby | null>(null);
+  const [height, setHeight] = useState<number | string>(''); // Change to number or string
+  const [weight, setWeight] = useState<number | string>(''); // Change to number or string
 
   const {itemId} = route.params;
 
-  // for (let i = 0; i < babies?.length; i++) {
-  //   if (babies.baby_id == itemId) {
-  //     setName(babies.baby_name);
-  //   }
-  // }
-
   useEffect(() => {
-    getBabyInfo({setBabies});
-    console.log(babies);
-  }, []);
+    const fetchBabyInfo = async () => {
+      const babies = await getBabyInfo();
+      const selectedBaby = babies.find(
+        (b: {baby_id: any}) => b.baby_id === itemId,
+      );
+      if (selectedBaby) {
+        setBaby(selectedBaby);
+        setSex(selectedBaby.baby_sex);
+        setBirth(moment(selectedBaby.baby_birth).format('YYYY-MM-DD'));
+        setHeight(
+          selectedBaby.baby_height ? Number(selectedBaby.baby_height) : '',
+        );
+        setWeight(
+          selectedBaby.baby_weight ? Number(selectedBaby.baby_weight) : '',
+        );
+      }
+    };
+
+    fetchBabyInfo();
+  }, [itemId]);
+
+  const handleSave = async () => {
+    if (baby) {
+      await updateBaby({
+        babyId: baby.baby_id,
+        name: baby.baby_name,
+        sex,
+        height: height ? Number(height) : null,
+        weight: weight ? Number(weight) : null,
+        birth,
+        navigation,
+      });
+    }
+  };
 
   return (
     <SafeAreaView
@@ -44,7 +78,11 @@ const BabyInfo = ({route}: any) => {
         <View>
           <Image
             style={styles.img}
-            source={require('../../../assets/images/hamster.png')}
+            source={
+              sex === 'female'
+                ? require('../../../assets/images/girl.png')
+                : require('../../../assets/images/boy.png')
+            }
           />
         </View>
         <KeyboardAvoidingView behavior={'height'}>
@@ -55,7 +93,10 @@ const BabyInfo = ({route}: any) => {
                 style={styles.input}
                 placeholder="이름을 입력하세요."
                 placeholderTextColor={'#cfcfcf'}
-                onChangeText={setName}
+                value={baby?.baby_name}
+                onChangeText={text =>
+                  setBaby(prev => (prev ? {...prev, baby_name: text} : null))
+                }
               />
             </View>
             <View style={styles.form}>
@@ -63,39 +104,35 @@ const BabyInfo = ({route}: any) => {
               <TouchableOpacity
                 style={styles.input}
                 onPress={() => setOpen(true)}>
-                <Text>{birth}</Text>
+                <Text>{birth || '생년월일을 선택하세요.'}</Text>
               </TouchableOpacity>
               <DatePicker
                 modal
                 open={open}
                 mode="date"
-                date={new Date()}
+                date={birth ? new Date(birth) : new Date()}
                 onConfirm={date => {
-                  const birth =
-                    date.getFullYear() +
-                    '-' +
-                    (date.getMonth() + 1) +
-                    '-' +
-                    date.getDate();
+                  const formattedDate = moment(date).format('YYYY-MM-DD');
                   setOpen(false);
-                  setBirth(birth);
+                  setBirth(formattedDate);
                 }}
                 onCancel={() => {
                   setOpen(false);
                 }}
               />
             </View>
+
             <View style={styles.form}>
               <Text style={styles.text}>아이 성별</Text>
               <View style={{flexDirection: 'row', width: '90%'}}>
                 <TouchableOpacity
                   onPress={() => setSex('female')}
-                  style={sex == 'female' ? styles.ClickBtn : styles.btn}>
+                  style={sex === 'female' ? styles.ClickBtn : styles.btn}>
                   <Text>여아</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => setSex('male')}
-                  style={sex == 'male' ? styles.ClickBtn : styles.btn}>
+                  style={sex === 'male' ? styles.ClickBtn : styles.btn}>
                   <Text>남아</Text>
                 </TouchableOpacity>
               </View>
@@ -105,16 +142,20 @@ const BabyInfo = ({route}: any) => {
               <View style={{flexDirection: 'row', width: '90%'}}>
                 <TextInput
                   style={styles.inputBody}
+                  placeholder="키를 입력하세요."
                   placeholderTextColor={'#cfcfcf'}
                   keyboardType="number-pad"
-                  onChangeText={setWeight}
+                  value={height ? String(height) : ''}
+                  onChangeText={text => setHeight(Number(text) || '')}
                 />
                 <Text style={styles.unit}>cm</Text>
                 <TextInput
                   style={styles.inputBody}
+                  placeholder="몸무게를 입력하세요."
                   placeholderTextColor={'#cfcfcf'}
                   keyboardType="number-pad"
-                  onChangeText={setHeight}
+                  value={weight ? String(weight) : ''}
+                  onChangeText={text => setWeight(Number(text) || '')}
                 />
                 <Text style={styles.unit}>kg</Text>
               </View>
@@ -122,7 +163,7 @@ const BabyInfo = ({route}: any) => {
           </View>
         </KeyboardAvoidingView>
       </View>
-      <TouchableOpacity onPress={() => {}} style={styles.wrapSaveBtn}>
+      <TouchableOpacity onPress={handleSave} style={styles.wrapSaveBtn}>
         <Text style={styles.saveBtn}>저장하기</Text>
       </TouchableOpacity>
     </SafeAreaView>
