@@ -47,14 +47,9 @@ function App() {
             headerShown: true,
             title: '육아일지',
             headerTitleAlign: 'center',
-            headerStyle: {
-              height: 45,
-            },
+            headerStyle: {height: 45},
             headerTintColor: 'black',
-            headerTitleStyle: {
-              fontSize: 14,
-              fontWeight: 'regular',
-            },
+            headerTitleStyle: {fontSize: 14, fontWeight: 'regular'},
             headerLeft: () => null,
           }}
         />
@@ -77,24 +72,7 @@ function App() {
               <TouchableOpacity onPress={onPress}>
                 <Image
                   style={{width: 9, height: 17, marginLeft: 24}}
-                  source={require('./assets/images/icons/LeftArrow.png')} // correct path
-                />
-              </TouchableOpacity>
-            ),
-          }}
-        />
-        <Stack.Screen
-          name="Amount"
-          component={Amount}
-          options={{
-            headerShown: true,
-            title: '유축량 입력',
-            headerTitleAlign: 'center',
-            headerLeft: ({onPress}) => (
-              <TouchableOpacity onPress={onPress}>
-                <Image
-                  style={{width: 9, height: 17, marginLeft: 24}}
-                  source={require('../app/assets/images/icons/LeftArrow.png')}
+                  source={require('./assets/images/icons/LeftArrow.png')}
                 />
               </TouchableOpacity>
             ),
