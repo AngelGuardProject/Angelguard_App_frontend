@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "707951798560",
+    "project_id": "angelguard-push",
+    "storage_bucket": "angelguard-push.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:707951798560:android:9b1d3140f35e4a23c88f45",
+        "android_client_info": {
+          "package_name": "com.angelguard_app_frontend"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhcgerO8CaV2lJDD528kJyAoKGAdaKS3A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
