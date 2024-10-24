@@ -12,11 +12,13 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {getDiaryDetail} from '../../api/diary.api';
 import SelectBabyModal from '../../components/Modal/SelectBabyModal';
 import OptionsMenu from '../../components/OptionsMenus';
+import {ParamListBase} from '@react-navigation/native';
 
-type DiaryDetailProps = StackScreenProps<
-  {DiaryDetail: {babyBoardId: string}},
-  'DiaryDetail'
->;
+type DiaryDetailProps = StackScreenProps<ParamListBase, 'DiaryDetail'>;
+
+interface RouteParams {
+  babyBoardId: string;
+}
 
 interface DiaryDetailType {
   baby_board_title: string;
@@ -26,7 +28,9 @@ interface DiaryDetailType {
 }
 
 const DiaryDetail: React.FC<DiaryDetailProps> = ({navigation, route}) => {
-  const {babyBoardId} = route.params;
+  // Define the expected route parameters
+  const {babyBoardId} = route.params as RouteParams;
+
   const [modalVisible, setModalVisible] = useState(false);
   const [diaryDetail, setDiaryDetail] = useState<DiaryDetailType | null>(null);
   const [optionsMenuVisible, setOptionsMenuVisible] = useState(false);
@@ -45,15 +49,15 @@ const DiaryDetail: React.FC<DiaryDetailProps> = ({navigation, route}) => {
     try {
       const detail = await getDiaryDetail(babyBoardId);
       setDiaryDetail(detail);
-      console.log(detail);
-      console.log(detail.baby_board_image);
     } catch (error) {
       console.error('Failed to fetch diary detail:', error);
     }
   };
 
   useEffect(() => {
-    fetchDiaryDetail();
+    if (babyBoardId) {
+      fetchDiaryDetail();
+    }
   }, [babyBoardId]);
 
   if (!diaryDetail) {
@@ -91,11 +95,8 @@ const DiaryDetail: React.FC<DiaryDetailProps> = ({navigation, route}) => {
               source={{
                 uri: `http://34.47.76.73:3000/uploads/${diaryDetail.baby_board_image
                   .split('/')
-                  .pop()}`, // Ensuring the URL is correctly formed
+                  .pop()}`,
               }}
-              onError={() =>
-                console.log('Image load failed', diaryDetail.baby_board_image)
-              }
               style={styles.hamsterImage}
             />
           )}
@@ -109,9 +110,7 @@ const DiaryDetail: React.FC<DiaryDetailProps> = ({navigation, route}) => {
       <OptionsMenu
         visible={optionsMenuVisible}
         onClose={() => setOptionsMenuVisible(false)}
-        onEdit={(title, content, image) => {
-          setOptionsMenuVisible(false);
-        }}
+        onEdit={() => setOptionsMenuVisible(false)}
         onDelete={() => {
           console.log('Delete tapped');
           setOptionsMenuVisible(false);
