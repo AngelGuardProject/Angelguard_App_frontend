@@ -24,7 +24,7 @@ export const pushAlert = async () => {
     console.log('Title:', notificationData.title);
     console.log('Body:', notificationData.body);
 
-    return notificationData; // Change here to return the notificationData
+    return notificationData;
   } catch (err) {
     console.error('푸시 알림 전송 실패:', err);
   }

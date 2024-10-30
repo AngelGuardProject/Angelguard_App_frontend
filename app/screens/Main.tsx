@@ -189,7 +189,7 @@ function Main({navigation}: Props) {
         <Text style={styles.title}>우리 아기 한눈에 보기</Text>
         <View style={styles.stream}>
           <VLCPlayer
-            style={{width: '100%', height: '100%', borderRadius: 10}}
+            style={styles.vlcPlayer} // Add this style for video dimensions
             videoAspectRatio="16:9"
             source={{uri: 'rtsp://louk342.iptime.org:8554/live.sdp'}}
             onError={error => console.log('VLC 오류: ', error)}
@@ -287,7 +287,6 @@ const styles = StyleSheet.create({
     height: 101,
     borderRadius: 10,
     marginBottom: 26,
-
     flexDirection: 'row',
     justifyContent: 'space-between',
     shadowOffset: {width: 0, height: 2}, // 그림자 오프셋
@@ -315,7 +314,6 @@ const styles = StyleSheet.create({
   },
   stream: {
     backgroundColor: '#fff',
-    borderColor: 'endregion',
     width: '90%',
     height: 235,
     borderRadius: 10,
@@ -324,7 +322,19 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 3,
-    paddingTop: 20,
+    overflow: 'hidden',
+  },
+  vlcPlayer: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
+    marginBottom: 11,
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 3,
+    overflow: 'hidden',
+    transform: [{rotate: '180deg'}],
   },
   end: {
     backgroundColor: '#fff',
