@@ -1,5 +1,6 @@
-import {useCallback, useState} from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 import {
+  Animated,
   KeyboardAvoidingView,
   StyleSheet,
   Text,
@@ -7,7 +8,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {LoginHandler} from '../api/login.api';
 
@@ -18,6 +18,8 @@ type Props = {
 const Login = ({navigation}: Props) => {
   const [id, setId] = useState('');
   const [pw, setPw] = useState('');
+  const animatedValue = new Animated.Value(-100); // 시작 위치를 더 낮게 설정
+  const opacityValue = new Animated.Value(0); // 시작 불투명도
 
   const onChangeID = useCallback((text: string) => {
     setId(text);
@@ -27,10 +29,32 @@ const Login = ({navigation}: Props) => {
     setPw(text);
   }, []);
 
+  useEffect(() => {
+    // 컴포넌트가 마운트될 때 애니메이션 시작
+    Animated.parallel([
+      Animated.timing(animatedValue, {
+        toValue: 0, // 끝 위치
+        duration: 2000, // 애니메이션 지속 시간을 늘림 (2초)
+        useNativeDriver: true, // Native Driver 사용
+      }),
+      Animated.timing(opacityValue, {
+        toValue: 1, // 끝 불투명도
+        duration: 2000, // 애니메이션 지속 시간을 늘림 (2초)
+        useNativeDriver: true, // Native Driver 사용
+      }),
+    ]).start();
+  }, []);
+
   return (
     <SafeAreaView edges={['bottom']} style={styles.container}>
       <View style={{alignItems: 'center'}}>
-        <Text style={styles.text}>AngelGuard</Text>
+        <Animated.Text
+          style={[
+            styles.text,
+            {transform: [{translateY: animatedValue}], opacity: opacityValue}, // 애니메이션 적용
+          ]}>
+          AngelGuard
+        </Animated.Text>
         <Text style={styles.login}>Log In</Text>
         <KeyboardAvoidingView behavior={'padding'}>
           <TextInput

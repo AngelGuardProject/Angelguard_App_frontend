@@ -93,7 +93,6 @@ const SchedulerInputModal: React.FC<SchedulerInputModalProps> = ({
   const handleCancel = () => {
     onClose('', '', null);
   };
-
   const handleSave = async () => {
     if (!eventTitle) {
       ToastAndroid.show('일정 제목을 입력해주세요.', ToastAndroid.SHORT);
@@ -117,19 +116,24 @@ const SchedulerInputModal: React.FC<SchedulerInputModalProps> = ({
       return;
     }
 
-    if (event) {
-      await updateScheduler(
-        event.scheduler_id,
-        eventTitle,
-        schedulerDate,
-        userId,
-        color,
-      );
-    } else {
-      await createScheduler(eventTitle, schedulerDate, color);
-    }
+    try {
+      if (event) {
+        await updateScheduler(
+          event.scheduler_id,
+          eventTitle,
+          schedulerDate,
+          userId,
+          color,
+        );
+      } else {
+        await createScheduler(eventTitle, schedulerDate, color);
+      }
 
-    onClose(eventTitle, color, selectedDateState);
+      // onClose 호출 시 수정된 일정 정보 전달
+      onClose(eventTitle, color, selectedDateState || schedulerDate);
+    } catch (error) {
+      ToastAndroid.show('일정 저장에 실패했습니다.', ToastAndroid.SHORT);
+    }
   };
 
   const displayDate = selectedDateState

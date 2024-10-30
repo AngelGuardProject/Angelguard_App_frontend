@@ -49,11 +49,11 @@ const SchedulerModalMain: React.FC<SchedulerModalMainProps> = ({
   };
 
   const handleEditEvent = (event: EventType) => {
-    setEditEvent(event); 
+    setEditEvent(event);
     setAddingEvent(true);
   };
 
-  const handleInputModalClose = (title: string, color: string) => {
+  const handleInputModalClose = () => {
     loadEvents();
     setAddingEvent(false);
   };
@@ -64,15 +64,21 @@ const SchedulerModalMain: React.FC<SchedulerModalMainProps> = ({
 
   const loadEvents = async () => {
     if (visible && selectedDate) {
-      const result = await fetchEventsForDate(selectedDate);
-      setEvents(result?.success ? result.data : []);
+      try {
+        const result = await fetchEventsForDate(selectedDate);
+        setEvents(result?.success ? result.data : []);
+      } catch (error) {
+        ToastAndroid.show('일정 로드 실패', ToastAndroid.SHORT);
+      }
     }
   };
 
   const handleDeleteEvent = async (schedulerId: string) => {
     try {
       await deleteEvent(schedulerId);
-      setEvents(events.filter(event => event.scheduler_id !== schedulerId));
+      setEvents(prevEvents =>
+        prevEvents.filter(event => event.scheduler_id !== schedulerId),
+      );
       ToastAndroid.show('일정이 삭제되었습니다.', ToastAndroid.SHORT);
     } catch (error) {
       ToastAndroid.show('일정 삭제 실패', ToastAndroid.SHORT);
@@ -158,7 +164,6 @@ const SchedulerModalMain: React.FC<SchedulerModalMainProps> = ({
     </Modal>
   );
 };
-
 
 const styles = StyleSheet.create({
   modalBackground: {
