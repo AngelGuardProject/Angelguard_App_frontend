@@ -19,6 +19,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:allowBackup="false"
         android:theme="@style/AppTheme">
+        
+        <!-- FCM 알림을 위한 기본 채널 설정 -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="angel-guard-channel"
+            tools:replace="android:value" />
 
         <activity
             android:name=".MainActivity"
@@ -42,11 +48,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <!-- FCM 알림을 위한 기본 채널 설정 -->
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="angel-guard-channel" /> <!-- 기본 알림 채널 ID 설정 -->
 
     </application>
 </manifest>
