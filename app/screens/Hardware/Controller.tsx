@@ -16,8 +16,6 @@ import {Buffer} from 'buffer';
 
 function Controller() {
   const [isStreaming, setIsStreaming] = useState(false);
-  const [connectionStatus, setConnectionStatus] =
-    useState('연결된 기기가 없습니다.');
   const [isMotorRunning, setIsMotorRunning] = useState(false);
   const ws = useRef<WebSocket | null>(null);
   const isAudioStreaming = useRef(false);
@@ -31,14 +29,14 @@ function Controller() {
     };
   }, []);
 
-  //모터조작 함수 모터는 처음에는 시작 두번째 누르면 멈춤
+  // 모터조작 함수 모터는 처음에는 시작 두번째 누르면 멈춤
   const handleMotorPress = async () => {
     const newMotorState = !isMotorRunning;
     setIsMotorRunning(newMotorState);
     await handleMotorOperation(newMotorState);
   };
 
-  //스트리밍 관련 함수들
+  // 스트리밍 관련 함수들
   const requestMicrophonePermission = async () => {
     try {
       const granted = await PermissionsAndroid.request(
@@ -60,7 +58,7 @@ function Controller() {
 
   const startStreaming = async () => {
     try {
-      await LiveAudioStream.init({
+      LiveAudioStream.init({
         sampleRate: 44100,
         channels: 1,
         bufferSize: 8192,
@@ -76,11 +74,14 @@ function Controller() {
           ws.current.readyState === WebSocket.OPEN &&
           isAudioStreaming.current
         ) {
-          //버퍼 인코딩하고
-          const audioBuffer = Buffer.from(data, 'base64');
-          // audioBuffer을 리틀 에디안으로 바꿔서 보냄
-          const littleEndianData = Buffer.from(audioBuffer.buffer);
-          ws.current.send(littleEndianData);
+          try {
+            const audioBuffer = Buffer.from(data, 'base64');
+            const littleEndianData = Buffer.from(audioBuffer.buffer);
+            ws.current.send(littleEndianData);
+          } catch (error) {
+            console.error('오디오 데이터 전송 중 오류 발생:', error);
+            Alert.alert('오류', '오디오 데이터 전송 중 오류가 발생했습니다.');
+          }
         }
       });
 
@@ -103,7 +104,7 @@ function Controller() {
   };
 
   const handleAudioPressIn = async () => {
-    const hasPermission = await requestMicrophonePermission(); //마이크 권한 묻기
+    const hasPermission = await requestMicrophonePermission();
     if (!hasPermission) {
       Alert.alert(
         '권한 필요',
@@ -116,7 +117,6 @@ function Controller() {
 
     ws.current.onopen = () => {
       console.log('WebSocket connection established');
-      setConnectionStatus('연결되었습니다.');
       isAudioStreaming.current = true;
       startStreaming();
       setIsStreaming(true);
@@ -124,7 +124,6 @@ function Controller() {
 
     ws.current.onclose = () => {
       console.log('연결이 종료되었습니다.');
-      setConnectionStatus('연결이 종료되었습니다.');
       isAudioStreaming.current = false;
     };
 
@@ -142,7 +141,6 @@ function Controller() {
     if (ws.current) {
       ws.current.close();
       console.log('스트리밍 중단');
-      setConnectionStatus('연결된 기기가 없습니다.');
     }
     await stopStreaming();
   };
@@ -162,10 +160,13 @@ function Controller() {
         <View style={styles.connectContainer}>
           <Text style={styles.connectTitle}>Baby Mobile Connect</Text>
           <View style={styles.connectBox}>
-            <Text style={styles.connectStatus}>{connectionStatus}</Text>
+            <Text style={styles.connectStatus}>
+              연결된 기기 : AngelGuard {'\n'} uuId: 0 {'\n'} 연결일자 :
+              2024-10-17
+            </Text>
             <View style={styles.connectButtonContainer}>
               <TouchableOpacity style={styles.connectButton}>
-                <Text style={styles.connectButtonText}>Connect</Text>
+                <Text style={styles.connectButtonText}>Disconnect</Text>
               </TouchableOpacity>
             </View>
           </View>

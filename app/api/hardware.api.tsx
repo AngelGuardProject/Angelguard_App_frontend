@@ -15,9 +15,9 @@ export const handleMotorOperation = async (isRunning: boolean) => {
 
     if (response.ok) {
       const message = isRunning
-        ? '모터 작동을 시작합니다.'
-        : '모터 작동을 멈춥니다.';
-      Alert.alert('Success', message);
+        ? '모빌 작동을 시작합니다.'
+        : '모빌 작동을 멈춥니다.';
+      Alert.alert('모터 작동', message);
     } else {
       console.log('Response Status:', response.status);
       const errorResponse = await response.text();
