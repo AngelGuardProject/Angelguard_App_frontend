@@ -12,6 +12,11 @@ import Intake from './screens/FeedingRecord/Intake';
 import {Alert, Image, TouchableOpacity} from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import PushNotification, {Importance} from 'react-native-push-notification';
+import BabyList from './screens/Information/BabyList';
+import Amount from './screens/FeedingRecord/Amount';
+import MyInfo from './screens/Information/MyInfo';
+import BabyInfo from './screens/Information/BabyInfo';
+import AddBaby from './screens/Information/AddBaby';
 
 // 1. RemoteMessageData 타입 정의
 type RemoteMessageData = {
@@ -104,7 +109,9 @@ function App() {
         <Stack.Screen
           name="Main"
           component={DrawerNavigator}
-          options={{headerShown: false}}
+          options={{
+            headerShown: false,
+          }}
         />
         <Stack.Screen
           name="DiaryList"
@@ -113,9 +120,14 @@ function App() {
             headerShown: true,
             title: '육아일지',
             headerTitleAlign: 'center',
-            headerStyle: {height: 45},
+            headerStyle: {
+              height: 45,
+            },
             headerTintColor: 'black',
-            headerTitleStyle: {fontSize: 14, fontWeight: 'regular'},
+            headerTitleStyle: {
+              fontSize: 14,
+              fontWeight: 'regular',
+            },
             headerLeft: () => null,
           }}
         />
@@ -138,7 +150,24 @@ function App() {
               <TouchableOpacity onPress={onPress}>
                 <Image
                   style={{width: 9, height: 17, marginLeft: 24}}
-                  source={require('./assets/images/icons/LeftArrow.png')}
+                  source={require('./assets/images/icons/LeftArrow.png')} // correct path
+                />
+              </TouchableOpacity>
+            ),
+          }}
+        />
+        <Stack.Screen
+          name="Amount"
+          component={Amount}
+          options={{
+            headerShown: true,
+            title: '유축량 입력',
+            headerTitleAlign: 'center',
+            headerLeft: ({onPress}) => (
+              <TouchableOpacity onPress={onPress}>
+                <Image
+                  style={{width: 9, height: 17, marginLeft: 24}}
+                  source={require('../app/assets/images/icons/LeftArrow.png')}
                 />
               </TouchableOpacity>
             ),
@@ -155,7 +184,7 @@ function App() {
               <TouchableOpacity onPress={onPress}>
                 <Image
                   style={{width: 9, height: 17, marginLeft: 24}}
-                  source={require('./assets/images/icons/LeftArrow.png')}
+                  source={require('../app/assets/images/icons/LeftArrow.png')}
                 />
               </TouchableOpacity>
             ),
@@ -172,7 +201,107 @@ function App() {
               <TouchableOpacity onPress={onPress}>
                 <Image
                   style={{width: 9, height: 17, marginLeft: 24}}
-                  source={require('./assets/images/icons/LeftArrow.png')}
+                  source={require('../app/assets/images/icons/LeftArrow.png')}
+                />
+              </TouchableOpacity>
+            ),
+          }}
+        />
+        <Stack.Screen
+          name="BabyList"
+          component={BabyList}
+          options={{
+            headerShown: true,
+            title: '아이 정보',
+            headerTitleAlign: 'left',
+            headerStyle: {
+              height: 45,
+            },
+            headerTintColor: 'black',
+            headerTitleStyle: {
+              fontSize: 14,
+              fontWeight: 'regular',
+            },
+            headerLeft: ({onPress}) => (
+              <TouchableOpacity onPress={onPress}>
+                <Image
+                  style={{width: 9, height: 17, marginLeft: 24}}
+                  source={require('../app/assets/images/icons/LeftArrow.png')}
+                />
+              </TouchableOpacity>
+            ),
+          }}
+        />
+        <Stack.Screen
+          name="MyInfo"
+          component={MyInfo}
+          options={{
+            headerShown: true,
+            title: '내 정보',
+            headerTitleAlign: 'left',
+            headerStyle: {
+              height: 45,
+            },
+            headerTintColor: 'black',
+            headerTitleStyle: {
+              fontSize: 14,
+              fontWeight: 'regular',
+            },
+            headerLeft: ({onPress}) => (
+              <TouchableOpacity onPress={onPress}>
+                <Image
+                  style={{width: 9, height: 17, marginLeft: 24}}
+                  source={require('../app/assets/images/icons/LeftArrow.png')}
+                />
+              </TouchableOpacity>
+            ),
+          }}
+        />
+        <Stack.Screen
+          name="BabyInfo"
+          component={BabyInfo}
+          options={{
+            headerShown: true,
+            title: '아이 정보',
+            headerTitleAlign: 'left',
+            headerStyle: {
+              height: 45,
+            },
+            headerTintColor: 'black',
+            headerTitleStyle: {
+              fontSize: 14,
+              fontWeight: 'regular',
+            },
+            headerLeft: ({onPress}) => (
+              <TouchableOpacity onPress={onPress}>
+                <Image
+                  style={{width: 9, height: 17, marginLeft: 24}}
+                  source={require('../app/assets/images/icons/LeftArrow.png')}
+                />
+              </TouchableOpacity>
+            ),
+          }}
+        />
+        <Stack.Screen
+          name="AddBaby"
+          component={AddBaby}
+          options={{
+            headerShown: true,
+            title: '아이 추가',
+            headerTitleAlign: 'left',
+            headerStyle: {
+              height: 45,
+            },
+            headerTintColor: 'black',
+            headerTitleStyle: {
+              fontSize: 14,
+              fontWeight: 'regular',
+            },
+            headerLeft: ({onPress}) => (
+              <TouchableOpacity onPress={onPress}>
+                <Image
+                  style={{width: 9, height: 17, marginLeft: 24}}
+                  source={require('../app/assets/images/icons/LeftArrow.png')}
                 />
               </TouchableOpacity>
             ),
