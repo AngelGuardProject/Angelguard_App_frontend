@@ -179,8 +179,9 @@ const styles = StyleSheet.create({
   },
   hamsterImage: {
     overflow: 'hidden',
-    width: '100%',
-    height: 300,
+    borderRadius: 10,
+    width: 350,
+    height: 350,
   },
   loadingContainer: {
     flex: 1,
