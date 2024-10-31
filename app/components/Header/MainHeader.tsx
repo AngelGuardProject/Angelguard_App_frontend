@@ -1,9 +1,9 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-export const HeaderLeft = ({onPress}: any) => {
+export const HeaderLeft = ({onPress, babyName}: any) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.headerL}>
-      <Text>예빈이</Text>
+      <Text>{babyName}</Text>
       <Image
         style={styles.Arrow}
         source={require('../../assets/images/icons/Arrow.png')}

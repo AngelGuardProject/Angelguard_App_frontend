@@ -18,6 +18,7 @@ const SelectBabyModal = (props: any) => {
   const {modalVisible, setModalVisible, onSelectBaby} = props;
   const screenHeight = Dimensions.get('screen').height;
   const panY = useRef(new Animated.Value(screenHeight)).current;
+
   useEffect(() => {
     if (modalVisible) {
       resetBottomSheet.start();
