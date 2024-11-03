@@ -77,7 +77,7 @@ function Main({navigation}: Props) {
     today_time: 0,
     yesterday_time: 0,
   });
-  const [babies, setBabies] = useState<Baby>();
+  const [babyName, setBabyName] = useState('');
 
   const isFocused = useIsFocused();
 
@@ -124,7 +124,6 @@ function Main({navigation}: Props) {
     getTmp();
     GetAmount({setAmount});
     GetIntake({setIntake});
-    getBabyInfo({setBabies});
     GetBreastFeeding({setTime});
     compIntake();
     compAmount();
@@ -176,7 +175,10 @@ function Main({navigation}: Props) {
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <View style={styles.header}>
-          <HeaderLeft onPress={() => setModalVisible(true)} />
+          <HeaderLeft
+            babyName={babyName}
+            onPress={() => setModalVisible(true)}
+          />
           <HeaderRight onPress={() => navigation.openDrawer()} />
         </View>
         <MainCarousel
@@ -265,6 +267,7 @@ function Main({navigation}: Props) {
       <SelectBabyModal
         setModalVisible={setModalVisible}
         modalVisible={modalVisible}
+        onSelectBaby={setBabyName}
       />
     </SafeAreaView>
   );
