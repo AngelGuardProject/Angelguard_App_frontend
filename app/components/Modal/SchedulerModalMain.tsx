@@ -68,6 +68,7 @@ const SchedulerModalMain: React.FC<SchedulerModalMainProps> = ({
         const result = await fetchEventsForDate(selectedDate);
         setEvents(result?.success ? result.data : []);
       } catch (error) {
+        console.error('Error loading events:', error);
         ToastAndroid.show('일정 로드 실패', ToastAndroid.SHORT);
       }
     }

@@ -10,6 +10,7 @@ import {Calendar, LocaleConfig} from 'react-native-calendars';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import SchedulerMainModal from '../../components/Modal/SchedulerModalMain'; // 모달 컴포넌트 임포트
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Define the Event type
 interface Event {
@@ -73,9 +74,11 @@ function SchedulerMain() {
     const fetchEvents = async () => {
       const year = new Date().getFullYear();
       const month = new Date().getMonth() + 1;
+      const user_login_id = await AsyncStorage.getItem('id');
+      console.log(user_login_id);
       try {
         const response = await axios.get(
-          `http://34.47.76.73:3000/scheduler/${year}/${month}`,
+          `http://34.47.76.73:3000/scheduler/${user_login_id}/${year}/${month}`,
         );
         if (response.data && response.data.data) {
           setEvents(response.data.data);
@@ -83,7 +86,7 @@ function SchedulerMain() {
           console.log('No events found');
         }
       } catch (error) {
-        console.error('Error fetching events:', error);
+        console.error('Error 스케쥴러 월 조회:', error);
       }
     };
 
@@ -94,24 +97,14 @@ function SchedulerMain() {
     setSelectedDate(day.dateString);
     setModalVisible(true);
   };
+
   const getMarkedDates = () => {
     const markedDates: {[key: string]: any} = {};
     events.forEach(event => {
-      const date = event.scheduler_date;
-
+      const date = event.scheduler_date.split('T')[0];
       if (!markedDates[date]) {
         markedDates[date] = {
           dots: [{key: 'event', color: event.scheduler_color || 'blue'}],
-          customStyles: {
-            container: {
-              backgroundColor: 'transparent',
-            },
-            text: {
-              color: 'black',
-            },
-          },
-
-          eventContent: event.scheduler_content, // Event content for display
         };
       } else {
         markedDates[date].dots.push({
