@@ -4,6 +4,7 @@ import {ToastAndroid} from 'react-native';
 
 interface PropsType {
   setIntake: (babyInfo: getIntake) => void;
+  babyName: string;
 }
 
 export const IntakeHandler = async (amount: number) => {
@@ -35,12 +36,11 @@ export const IntakeHandler = async (amount: number) => {
     });
 };
 
-export const GetIntake = async ({setIntake}: PropsType) => {
+export const GetIntake = async ({setIntake, babyName}: PropsType) => {
   const token = await AsyncStorage.getItem('token');
-  const baby_name = 'hayoung';
 
   axios
-    .get(`http://34.47.76.73:3000/eat/selecteat/${baby_name}`, {
+    .get(`http://34.47.76.73:3000/eat/selecteat/${babyName}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -1,4 +1,3 @@
-import {useIsFocused, useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import {
@@ -16,9 +15,8 @@ import SelectBabyModal from '../components/Modal/SelectBabyModal';
 import {VLCPlayer} from 'react-native-vlc-media-player';
 import {GetAmount} from '../api/amount.api';
 import {GetIntake} from '../api/intake.api';
-import {getBabyInfo} from '../api/baby.api';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {GetBreastFeeding} from '../api/breastFeeding';
+import {getBabyInfo} from '../api/baby.api';
 
 // 한국어로 반환
 const getKoreanDay = (dayNumber: number) => {
@@ -57,7 +55,7 @@ const formatTime = () => {
 type Props = {
   navigation: {
     openDrawer(): void;
-    navigate: (name: string) => void;
+    navigate: (name: string, params?: {babyName: string}) => void;
   };
 };
 
@@ -77,9 +75,7 @@ function Main({navigation}: Props) {
     today_time: 0,
     yesterday_time: 0,
   });
-  const [babyName, setBabyName] = useState('');
-
-  const isFocused = useIsFocused();
+  const [babies, setBabies] = useState<Baby[]>([]);
 
   const compIntake = () => {
     const comp = intake.yesterday_amount - intake.today_amount;
@@ -108,6 +104,7 @@ function Main({navigation}: Props) {
   };
 
   const compTime = () => {
+    console.log(time.today_time, ' ', time.yesterday_time);
     const comp = time.yesterday_time - time.today_time;
     if (comp == 0) {
       return '수유시간이 어제와 동일합니다.';
@@ -120,14 +117,25 @@ function Main({navigation}: Props) {
     }
   };
 
+  const [babyName, setBabyName] = useState('');
+
   useEffect(() => {
     getTmp();
-    GetAmount({setAmount});
-    GetIntake({setIntake});
-    GetBreastFeeding({setTime});
-    compIntake();
-    compAmount();
-  }, [isFocused]);
+    getBabyInfo({
+      setBabies: babyData => {
+        setBabies(babyData);
+        if (babyData.length > 0) {
+          setBabyName(babyData[0].baby_name);
+        }
+      },
+    });
+    if (babyName) {
+      GetAmount({setAmount, babyName});
+      GetIntake({setIntake, babyName});
+      GetBreastFeeding({setTime, babyName});
+    }
+    getBabyInfo({setBabies});
+  }, [babyName]);
 
   const getTmp = () => {
     axios
@@ -204,7 +212,7 @@ function Main({navigation}: Props) {
           <TouchableOpacity
             style={styles.TouchInput}
             onPress={() => {
-              navigation.navigate('BreastFeeding');
+              navigation.navigate('BreastFeeding', {babyName});
             }}>
             <View style={styles.endLeft}>
               <Image
