@@ -6,15 +6,20 @@ interface PropsType {
   babyName: string;
 }
 
-export const AddAmount = async (feedAmount: number) => {
+interface AddAmount {
+  amount: number;
+  babyName: string;
+}
+
+export const AddAmount = async ({amount, babyName}: AddAmount) => {
   const token = await AsyncStorage.getItem('token');
-  console.log(feedAmount);
+
   axios
     .post(
       'http://34.47.76.73:3000/eat/pumping',
       {
-        intake: feedAmount,
-        baby_name: 'hayoung',
+        intake: amount,
+        baby_name: babyName,
       },
       {
         headers: {

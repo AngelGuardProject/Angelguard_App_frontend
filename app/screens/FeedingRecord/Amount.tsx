@@ -11,10 +11,12 @@ import {AddAmount} from '../../api/amount.api';
 
 interface PropsType {
   navigation: {navigate: (name: string) => void};
+  route: any;
 }
 
-const Amount = ({navigation}: PropsType) => {
+const Amount = ({navigation, route}: PropsType) => {
   const [amount, setAmount] = useState(0);
+  const {babyName} = route.params;
 
   const plusAmount = (addAmount: number) => {
     setAmount(amount + addAmount);
@@ -95,7 +97,8 @@ const Amount = ({navigation}: PropsType) => {
       </View>
       <TouchableOpacity
         onPress={() => {
-          AddAmount(amount);
+          AddAmount({amount, babyName});
+          navigation.navigate('Main');
         }}
         style={styles.wrapSaveBtn}>
         <Text style={styles.saveBtn}>저장하기</Text>
