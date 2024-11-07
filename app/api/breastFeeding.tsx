@@ -1,7 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-export const AddBreastFeeding = async (time: number) => {
+interface AddBreast {
+  time: number;
+  babyName: string;
+}
+
+export const AddBreastFeeding = async ({time, babyName}: AddBreast) => {
   const token = await AsyncStorage.getItem('token');
 
   axios
@@ -9,7 +14,7 @@ export const AddBreastFeeding = async (time: number) => {
       'http://34.47.76.73:3000/eat/insertms',
       {
         time: time,
-        baby_name: 'hayoung',
+        baby_name: babyName,
       },
       {
         headers: {
@@ -27,14 +32,14 @@ export const AddBreastFeeding = async (time: number) => {
 
 interface PropsType {
   setTime: (babInfo: GetTime) => void;
+  babyName: string;
 }
 
-export const GetBreastFeeding = async ({setTime}: PropsType) => {
-  const baby_name = 'hayoung';
+export const GetBreastFeeding = async ({setTime, babyName}: PropsType) => {
   const token = await AsyncStorage.getItem('token');
 
   axios
-    .get(`http://34.47.76.73:3000/eat/selectms/${baby_name}`, {
+    .get(`http://34.47.76.73:3000/eat/selectms/${babyName}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

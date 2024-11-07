@@ -10,15 +10,20 @@ import {
 import DatePicker from 'react-native-date-picker';
 import {AddBreastFeeding} from '../../api/breastFeeding';
 
-const BreastFeeding = () => {
+const BreastFeeding = ({route}: any) => {
   const date = new Date();
+  const {babyName} = route.params;
   const [startOpen, setStartOpen] = useState(false);
   const [endOpen, setEndOpen] = useState(false);
   const [startTime, setStartTime] = useState(
-    `${date.getHours()} : ${date.getMinutes()}`,
+    `${String(date.getHours()).padStart(2, '0')} : ${String(
+      date.getMinutes(),
+    ).padStart(2, '0')}`,
   );
   const [endTime, setEndTime] = useState(
-    `${date.getHours()} : ${date.getMinutes()}`,
+    `${String(date.getHours()).padStart(2, '0')} : ${String(
+      date.getMinutes(),
+    ).padStart(2, '0')}`,
   );
   const [pm, setPm] = useState<String>(
     `${date.getHours() >= 12 ? '오후' : '오전'}`,
@@ -27,12 +32,14 @@ const BreastFeeding = () => {
     `${date.getHours() >= 12 ? '오후' : '오전'}`,
   );
 
-  const [sTime, setSTime] = useState<number>(0);
+  const [sTime, setSTime] = useState<number>(
+    date.getHours() * 60 + date.getMinutes(),
+  );
   const [eTime, setETime] = useState<number>(0);
 
   const compTime = () => {
-    const result = eTime - sTime;
-    AddBreastFeeding(result);
+    const time = eTime - sTime;
+    AddBreastFeeding({time, babyName});
   };
 
   return (

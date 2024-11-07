@@ -3,6 +3,7 @@ import axios from 'axios';
 
 interface PropsType {
   setAmount: (babyInfo: getAmount) => void;
+  babyName: string;
 }
 
 export const AddAmount = async (feedAmount: number) => {
@@ -29,16 +30,16 @@ export const AddAmount = async (feedAmount: number) => {
     });
 };
 
-export const GetAmount = async ({setAmount}: PropsType) => {
+export const GetAmount = async ({setAmount, babyName}: PropsType) => {
   const token = await AsyncStorage.getItem('token');
-  const baby_name = 'hayoung';
   axios
-    .get(`http://34.47.76.73:3000/eat/selectpum/${baby_name}`, {
+    .get(`http://34.47.76.73:3000/eat/selectpum/${babyName}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
     .then(res => {
+      console.log(res.data);
       setAmount(res.data);
     })
     .catch(err => {
