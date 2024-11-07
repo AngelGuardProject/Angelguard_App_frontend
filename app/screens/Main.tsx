@@ -120,7 +120,6 @@ function Main({navigation}: Props) {
   const [babyName, setBabyName] = useState('');
 
   useEffect(() => {
-    getTmp();
     getBabyInfo({
       setBabies: babyData => {
         setBabies(babyData);
@@ -129,12 +128,13 @@ function Main({navigation}: Props) {
         }
       },
     });
-    if (babyName) {
-      GetAmount({setAmount, babyName});
-      GetIntake({setIntake, babyName});
-      GetBreastFeeding({setTime, babyName});
-    }
-    getBabyInfo({setBabies});
+  }, []);
+
+  useEffect(() => {
+    getTmp();
+    GetAmount({setAmount, babyName});
+    GetIntake({setIntake, babyName});
+    GetBreastFeeding({setTime, babyName});
   }, [babyName]);
 
   const getTmp = () => {
@@ -232,7 +232,7 @@ function Main({navigation}: Props) {
           <TouchableOpacity
             style={styles.TouchInput}
             onPress={() => {
-              navigation.navigate('Amount');
+              navigation.navigate('Amount', {babyName});
             }}>
             <View style={styles.endLeft}>
               <Image
@@ -253,7 +253,7 @@ function Main({navigation}: Props) {
           <TouchableOpacity
             style={styles.TouchInput}
             onPress={() => {
-              navigation.navigate('Intake');
+              navigation.navigate('Intake', {babyName});
             }}>
             <View style={styles.endLeft}>
               <Image

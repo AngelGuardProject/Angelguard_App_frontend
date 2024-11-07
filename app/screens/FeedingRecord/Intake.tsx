@@ -10,12 +10,13 @@ import {useCallback, useState} from 'react';
 import {IntakeHandler} from '../../api/intake.api';
 
 interface PropsType {
+  route: any;
   navigation: {navigate: (name: string) => void};
 }
 
-const Intake = ({navigation}: PropsType) => {
+const Intake = ({route, navigation}: PropsType) => {
   const [intake, setIntake] = useState(0);
-  const baby = 'hayoung';
+  const {babyName} = route.params;
 
   const plusAmount = (addAmount: number) => {
     setIntake(intake + addAmount);
@@ -97,8 +98,7 @@ const Intake = ({navigation}: PropsType) => {
       </View>
       <TouchableOpacity
         onPress={() => {
-          console.log(intake, baby);
-          IntakeHandler(intake);
+          IntakeHandler({intake, babyName, navigation});
         }}
         style={styles.wrapSaveBtn}>
         <Text style={styles.saveBtn}>저장하기</Text>
