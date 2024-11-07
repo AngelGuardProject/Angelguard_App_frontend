@@ -122,7 +122,6 @@ const SchedulerInputModal: React.FC<SchedulerInputModalProps> = ({
           event.scheduler_id,
           eventTitle,
           schedulerDate,
-          userId,
           color,
         );
       } else {
