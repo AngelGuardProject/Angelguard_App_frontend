@@ -8,6 +8,7 @@ import {
   Dimensions,
   PermissionsAndroid,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import LiveAudioStream from 'react-native-live-audio-stream';
@@ -17,6 +18,8 @@ import {Buffer} from 'buffer';
 function Controller() {
   const [isStreaming, setIsStreaming] = useState(false);
   const [isMotorRunning, setIsMotorRunning] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
   const ws = useRef<WebSocket | null>(null);
   const isAudioStreaming = useRef(false);
 
@@ -29,6 +32,17 @@ function Controller() {
     };
   }, []);
 
+  const onMobileConnect = async () => {
+    setIsConnecting(true);
+    setTimeout(() => {
+      setIsConnecting(false);
+      setIsConnected(true);
+    }, 1000);
+  };
+
+  const handleDisconnect = () => {
+    setIsConnected(false);
+  };
   // 모터조작 함수 모터는 처음에는 시작 두번째 누르면 멈춤
   const handleMotorPress = async () => {
     const newMotorState = !isMotorRunning;
@@ -160,15 +174,35 @@ function Controller() {
         <View style={styles.connectContainer}>
           <Text style={styles.connectTitle}>Baby Mobile Connect</Text>
           <View style={styles.connectBox}>
-            <Text style={styles.connectStatus}>
-              연결된 기기 : AngelGuard {'\n'} uuId: 0 {'\n'} 연결일자 :
-              2024-10-17
-            </Text>
-            <View style={styles.connectButtonContainer}>
-              <TouchableOpacity style={styles.connectButton}>
-                <Text style={styles.connectButtonText}>Disconnect</Text>
-              </TouchableOpacity>
-            </View>
+            {isConnecting ? (
+              <>
+                <Text style={styles.connectingText}>연결 중 입니다...</Text>
+                <ActivityIndicator size="large" color="#000000" />
+              </>
+            ) : isConnected ? (
+              <>
+                <Text style={styles.connectStatus}>
+                  연결된 모빌: AngelGuard
+                  {'\n'} UUID: 0 {'\n'} 연결된 날짜: 2024-10-17
+                </Text>
+                <TouchableOpacity
+                  style={styles.connectButton}
+                  onPress={handleDisconnect}>
+                  <Text style={styles.connectButtonText}>Disconnect</Text>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <>
+                <Text style={styles.connectStatus}>
+                  연결된 모빌이 없습니다.
+                </Text>
+                <TouchableOpacity
+                  style={styles.connectButton}
+                  onPress={onMobileConnect}>
+                  <Text style={styles.connectButtonText}>Connect</Text>
+                </TouchableOpacity>
+              </>
+            )}
           </View>
         </View>
         <View style={styles.iconContainer}>
@@ -244,13 +278,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  connectingText: {
+    fontSize: 16,
+    color: '#000000',
+    fontWeight: '500',
+    marginBottom: 50,
+    fontFamily: 'SUITE',
+  },
   connectStatus: {
     textAlign: 'center',
     fontWeight: '300',
-    fontSize: 14,
-    color: '#a6a6a6',
+    fontSize: 16,
+    color: '#000000',
     marginBottom: 21,
     fontFamily: 'SUITE',
+    lineHeight: 20,
   },
   connectButtonContainer: {
     alignItems: 'center',
