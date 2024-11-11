@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import {
+  ActivityIndicator,
   Dimensions,
   Image,
   StyleSheet,
@@ -18,7 +19,6 @@ import {GetIntake} from '../api/intake.api';
 import {GetBreastFeeding} from '../api/breastFeeding';
 import {getBabyInfo} from '../api/baby.api';
 
-// 한국어로 반환
 const getKoreanDay = (dayNumber: number) => {
   const days = [
     '일요일',
@@ -32,23 +32,21 @@ const getKoreanDay = (dayNumber: number) => {
   return days[dayNumber];
 };
 
-// 날짜를 원하는 형식으로 변환하는 함수
 const formatDate = (dateString: string | number | Date) => {
-  const date = new Date(dateString); // dateString을 Date 객체로 변환
+  const date = new Date(dateString);
   const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 월은 0부터 시작하므로 +1해야함...
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const day = date.getDate().toString().padStart(2, '0');
-  const dayOfWeek = getKoreanDay(date.getDay()); // 요일 구하기
+  const dayOfWeek = getKoreanDay(date.getDay());
   return `${year}.${month}.${day} (${dayOfWeek})`;
 };
 
-// 현재 시간을 한국어 형식으로 반환함~~~
 const formatTime = () => {
   const now = new Date();
   const hours = now.getHours();
   const minutes = now.getMinutes().toString().padStart(2, '0');
   const period = hours >= 12 ? '오후' : '오전';
-  const formattedHours = hours % 12 || 12; // 12시간 형식으로 변환
+  const formattedHours = hours % 12 || 12;
   return `${period} ${formattedHours}시 ${minutes}분`;
 };
 
@@ -63,6 +61,8 @@ function Main({navigation}: Props) {
   const [tmp, setTmp] = useState(null);
   const [hm, setHm] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [isBuffering, setIsBuffering] = useState(false);
+  const [isConnected, setIsConnected] = useState(true);
   const [intake, setIntake] = useState<getIntake>({
     yesterday_amount: 0,
     today_amount: 0,
@@ -197,15 +197,26 @@ function Main({navigation}: Props) {
         />
 
         <Text style={styles.title}>우리 아기 한눈에 보기</Text>
+
         <View style={styles.stream}>
-          <VLCPlayer
-            style={styles.vlcPlayer} // Add this style for video dimensions
-            videoAspectRatio="16:9"
-            source={{uri: 'rtsp://louk342.iptime.org:8554/live.sdp'}}
-            onError={error => console.log('VLC 오류: ', error)}
-            onBuffering={buffering => console.log('버퍼링 중: ', buffering)}
-            onPlaying={() => console.log('재생 중...')}
-          />
+          {isBuffering && <ActivityIndicator size="large" color="#0000ff" />}
+          {isConnected ? (
+            <VLCPlayer
+              style={styles.vlcPlayer}
+              videoAspectRatio="16:9"
+              source={{uri: 'rtsp://louk342.iptime.org:8554/live.sdp'}}
+              onError={() => {
+                console.log('VLC 오류');
+                setIsConnected(false);
+              }}
+              onBuffering={buffering => {
+                console.log('버퍼링 중:', buffering);
+              }}
+              onPlaying={() => setIsBuffering(false)}
+            />
+          ) : (
+            <Text style={styles.errorMessage}>모빌 연결 후 사용해주세요.</Text>
+          )}
         </View>
         <Text style={styles.title}>오늘의 수유시간, 유축량, 섭취량은?</Text>
         <View style={styles.end}>
@@ -300,9 +311,9 @@ const styles = StyleSheet.create({
     marginBottom: 26,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    shadowOffset: {width: 0, height: 2}, // 그림자 오프셋
-    shadowOpacity: 0.2, // 그림자 투명도
-    shadowRadius: 3, // 그림자 반경
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
     elevation: 3,
   },
   sliderL: {
@@ -334,6 +345,13 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 3,
     overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  errorMessage: {
+    justifyContent: 'center',
+    color: '#a6a6a6',
+    fontSize: 16,
   },
   vlcPlayer: {
     width: '100%',
