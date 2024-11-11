@@ -18,81 +18,76 @@ import MyInfo from './screens/Information/MyInfo';
 import BabyInfo from './screens/Information/BabyInfo';
 import AddBaby from './screens/Information/AddBaby';
 
-// 1. RemoteMessageData 타입 정의
 type RemoteMessageData = {
-  title: string; // 알림의 제목
-  body: string; // 알림의 내용
+  title: string;
+  body: string;
 };
 
 const Stack = createStackNavigator();
 
 function App() {
   useEffect(() => {
-    // 사용자 권한 요청 함수
     const requestUserPermission = async () => {
-      const authStatus = await messaging().requestPermission(); // 권한 요청
+      const authStatus = await messaging().requestPermission();
       const enabled =
         authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL; // 권한 상태 확인
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
       if (enabled) {
-        console.log('Authorization status:', authStatus); // 권한 부여 상태 로그
+        console.log('Authorization status:', authStatus);
       } else {
-        console.warn('Permission not granted'); // 권한이 거부된 경우 경고
+        console.warn('Permission not granted');
       }
     };
 
-    // 알림 채널 생성 함수
     const createNotificationChannel = () => {
       PushNotification.createChannel(
         {
-          channelId: 'angel-guard-channel', // 채널 ID
-          channelName: 'Angel Guard Channel', // 채널 이름
-          channelDescription: 'A channel for Angel Guard notifications', // 채널 설명
-          playSound: true, // 소리 재생 여부
-          soundName: 'default', // 기본 소리 사용
-          importance: Importance.HIGH, // 중요도 설정
-          vibrate: true, // 진동 여부
+          channelId: 'angel-guard-channel',
+          channelName: 'Angel Guard Channel',
+          channelDescription: 'A channel for Angel Guard notifications',
+          playSound: true,
+          soundName: 'default',
+          importance: Importance.HIGH,
+          vibrate: true,
         },
-        created => console.log(`createChannel returned '${created}'`), // 채널 생성 결과 로그
+        created => console.log(`createChannel returned '${created}'`),
       );
     };
 
-    // 메시지 수신 대기
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      // 포그라운드에서 수신한 메시지 처리
       if (remoteMessage.notification) {
-        Alert.alert('새 알림!', remoteMessage.notification.body); // 알림 표시
+        Alert.alert('새 알림!', remoteMessage.notification.body);
       } else {
-        const data = remoteMessage.data as RemoteMessageData; // 데이터 타입 캐스팅
+        const data = remoteMessage.data as RemoteMessageData;
         PushNotification.localNotification({
-          channelId: 'angel-guard-channel', // 채널 ID
-          title: data.title, // 알림 제목
-          message: data.body, // 알림 내용
-          playSound: true, // 소리 재생 여부
-          soundName: 'default', // 기본 소리 사용
+          channelId: 'angel-guard-channel',
+          title: data.title,
+          message: data.body,
+          playSound: true,
+          soundName: 'default',
         });
       }
     });
-    // 백그라운드 메시지 처리
+
     messaging().setBackgroundMessageHandler(async remoteMessage => {
-      console.log('Message handled in the background!', remoteMessage.data); // 백그라운드에서 처리된 메시지 로그
-      const data = remoteMessage.data as RemoteMessageData; // 데이터 타입 캐스팅
+      console.log('Message handled in the background!', remoteMessage.data);
+      const data = remoteMessage.data as RemoteMessageData;
 
       PushNotification.localNotification({
-        channelId: 'angel-guard-channel', // 채널 ID
-        title: data.title, // 알림 제목
-        message: data.body, // 알림 내용
-        playSound: true, // 소리 재생 여부
-        soundName: 'default', // 기본 소리 사용
+        channelId: 'angel-guard-channel',
+        title: data.title,
+        message: data.body,
+        playSound: true,
+        soundName: 'default',
         priority: 'high',
         smallIcon: 'ic_notification',
       });
     });
 
-    requestUserPermission(); // 사용자 권한 요청
-    createNotificationChannel(); // 알림 채널 생성
-    return unsubscribe; // 언섭스크라이브 반환
+    requestUserPermission();
+    createNotificationChannel();
+    return unsubscribe;
   }, []);
 
   return (
@@ -150,7 +145,7 @@ function App() {
               <TouchableOpacity onPress={onPress}>
                 <Image
                   style={{width: 9, height: 17, marginLeft: 24}}
-                  source={require('./assets/images/icons/LeftArrow.png')} // correct path
+                  source={require('./assets/images/icons/LeftArrow.png')}
                 />
               </TouchableOpacity>
             ),
