@@ -70,26 +70,26 @@ function SchedulerMain() {
   const [modalVisible, setModalVisible] = useState(false);
   const [events, setEvents] = useState<Event[]>([]);
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      const year = new Date().getFullYear();
-      const month = new Date().getMonth() + 1;
-      const user_login_id = await AsyncStorage.getItem('id');
-      console.log(user_login_id);
-      try {
-        const response = await axios.get(
-          `http://34.47.76.73:3000/scheduler/${user_login_id}/${year}/${month}`,
-        );
-        if (response.data && response.data.data) {
-          setEvents(response.data.data);
-        } else {
-          console.log('No events found');
-        }
-      } catch (error) {
-        console.error('Error 스케쥴러 월 조회:', error);
+  const fetchEvents = async () => {
+    const year = new Date().getFullYear();
+    const month = new Date().getMonth() + 1;
+    const user_login_id = await AsyncStorage.getItem('id');
+    console.log(user_login_id);
+    try {
+      const response = await axios.get(
+        `http://34.47.76.73:3000/scheduler/${user_login_id}/${year}/${month}`,
+      );
+      if (response.data && response.data.data) {
+        setEvents(response.data.data);
+      } else {
+        console.log('No events found');
       }
-    };
+    } catch (error) {
+      console.error('Error 스케쥴러 월 조회:', error);
+    }
+  };
 
+  useEffect(() => {
     fetchEvents();
   }, []);
 
@@ -115,6 +115,10 @@ function SchedulerMain() {
     });
 
     return markedDates;
+  };
+
+  const handleSave = () => {
+    fetchEvents(); // 일정이 저장될 때마다 일정을 다시 로드
   };
 
   return (
@@ -194,7 +198,6 @@ function SchedulerMain() {
               },
             },
           }}
-          // Custom render for each day
           renderDay={(
             date: {
               dateString: any;
@@ -239,6 +242,7 @@ function SchedulerMain() {
           visible={modalVisible}
           onClose={() => setModalVisible(false)}
           selectedDate={selectedDate}
+          onSave={handleSave} // 일정 저장 시 호출
         />
       </View>
     </SafeAreaView>

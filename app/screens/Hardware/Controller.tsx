@@ -289,10 +289,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '300',
     fontSize: 16,
-    color: '#000000',
+    color: '#a6a6a6a6',
     marginBottom: 21,
     fontFamily: 'SUITE',
-    lineHeight: 20,
+    lineHeight: 25,
   },
   connectButtonContainer: {
     alignItems: 'center',

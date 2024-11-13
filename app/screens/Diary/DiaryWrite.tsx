@@ -53,6 +53,7 @@ const DiaryWrite: React.FC<{
       } else {
         //diaryId 없을 때 (육아일지 생성시 )
         await createDiary(titleState, contentState, selectedImage, navigation);
+        navigation.navigate('Diary');
       }
     } catch (error) {
       console.error('Error saving diary:', error);

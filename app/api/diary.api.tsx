@@ -88,7 +88,7 @@ export const fetchDiaryList = async (pageNum: number) => {
     } else if (response.status === 403) {
       ToastAndroid.show('일지 목록 조회에 실패했습니다.', ToastAndroid.SHORT);
     } else {
-      ToastAndroid.show('아직 일기가 없습니다.', ToastAndroid.SHORT);
+      console.log('일기가 없음');
     }
   } catch (error) {
     console.error(error);
