@@ -16,6 +16,7 @@ interface SchedulerModalMainProps {
   visible: boolean;
   onClose: () => void;
   selectedDate: string | null;
+  onSave: () => void;
 }
 
 interface EventType {
@@ -37,6 +38,7 @@ const formatDate = (date: string) => {
 const SchedulerModalMain: React.FC<SchedulerModalMainProps> = ({
   visible,
   onClose,
+  onSave,
   selectedDate,
 }) => {
   const [addingEvent, setAddingEvent] = useState(false);
@@ -56,6 +58,7 @@ const SchedulerModalMain: React.FC<SchedulerModalMainProps> = ({
   const handleInputModalClose = () => {
     loadEvents();
     setAddingEvent(false);
+    onSave();
   };
 
   const handleCancel = () => {

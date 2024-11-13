@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -16,7 +16,7 @@ type DiaryListNavigationProp = StackNavigationProp<any, any>;
 
 const DiaryList: React.FC = () => {
   const navigation = useNavigation<DiaryListNavigationProp>();
-  const [diaries, setDiaries] = useState([]);
+  const [diaries, setDiaries] = useState<any[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [pageNum, setPageNum] = useState(1);
 
@@ -36,7 +36,6 @@ const DiaryList: React.FC = () => {
   );
 
   const navigateToDiaryDetail = (babyBoardId: string) => {
-    console.log('Navigating to DiaryDetail with ID:', babyBoardId); // Debugging
     navigation.navigate('DiaryDetail', {babyBoardId});
   };
 
@@ -54,7 +53,7 @@ const DiaryList: React.FC = () => {
         </TouchableOpacity>
 
         <ScrollView style={styles.entryContainer}>
-          {diaries.map((diary: any) => (
+          {diaries.map(diary => (
             <TouchableOpacity
               key={diary.baby_board_id}
               style={styles.entryItem}
