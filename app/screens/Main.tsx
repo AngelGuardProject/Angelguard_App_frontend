@@ -32,6 +32,14 @@ const getKoreanDay = (dayNumber: number) => {
   return days[dayNumber];
 };
 
+const calculateDaysSinceBirth = (birthDateString: string) => {
+  const birthDate = new Date(birthDateString);
+  const today = new Date();
+  const diffTime = Math.abs(today.getTime() - birthDate.getTime());
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // 일 단위로 계산
+  return diffDays;
+};
+
 const formatDate = (dateString: string | number | Date) => {
   const date = new Date(dateString);
   const year = date.getFullYear();
@@ -76,6 +84,21 @@ function Main({navigation}: Props) {
     yesterday_time: 0,
   });
   const [babies, setBabies] = useState<Baby[]>([]);
+  const [babyName, setBabyName] = useState('');
+  const [babyBirth, setBabyBirth] = useState(''); // 선택된 아기의 생일
+  const [daysSinceBirth, setDaysSinceBirth] = useState(0);
+
+  const findBabyByName = (name: string) => {
+    return babies.find(baby => baby.baby_name === name);
+  };
+
+  const handleSelectBabyByName = (name: string) => {
+    const selectedBaby = findBabyByName(name);
+    if (selectedBaby) {
+      setBabyBirth(formatDate(selectedBaby.baby_birth));
+      setDaysSinceBirth(calculateDaysSinceBirth(selectedBaby.baby_birth));
+    }
+  };
 
   const compIntake = () => {
     const comp = intake.yesterday_amount - intake.today_amount;
@@ -117,24 +140,33 @@ function Main({navigation}: Props) {
     }
   };
 
-  const [babyName, setBabyName] = useState('');
-
   useEffect(() => {
     getBabyInfo({
       setBabies: babyData => {
         setBabies(babyData);
         if (babyData.length > 0) {
           setBabyName(babyData[0].baby_name);
+          handleSelectBabyByName(babyData[0].baby_name);
         }
       },
     });
   }, []);
 
   useEffect(() => {
-    getTmp();
-    GetAmount({setAmount, babyName});
-    GetIntake({setIntake, babyName});
-    GetBreastFeeding({setTime, babyName});
+    if (babyName) {
+      const selectedBaby = findBabyByName(babyName);
+      if (selectedBaby) {
+        // 생일과 생일부터 경과 일 수 업데이트
+        setBabyBirth(formatDate(selectedBaby.baby_birth));
+        setDaysSinceBirth(calculateDaysSinceBirth(selectedBaby.baby_birth));
+      }
+
+      // 온도 및 습도와 다른 데이터 업데이트
+      getTmp();
+      GetAmount({setAmount, babyName});
+      GetIntake({setIntake, babyName});
+      GetBreastFeeding({setTime, babyName});
+    }
   }, [babyName]);
 
   const getTmp = () => {
@@ -157,7 +189,7 @@ function Main({navigation}: Props) {
     {
       date: currentDateFormatted,
       time: currentTimeFormatted,
-      day: '+103', // 아이 생일로 며칠째인지
+      day: `+${daysSinceBirth}`,
       unit: '',
       image: require('../assets/images/icons/MainCarousel/Baby.png'),
     },
