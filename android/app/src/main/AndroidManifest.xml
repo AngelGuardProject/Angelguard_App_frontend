@@ -8,8 +8,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    
-    <!-- FCM를 통해 알림을 받기 위한 권한 추가 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
@@ -18,9 +16,9 @@
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:allowBackup="false"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
         
-        <!-- FCM 알림을 위한 기본 채널 설정 -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="angel-guard-channel"
@@ -39,7 +37,6 @@
             </intent-filter>
         </activity>
 
-        <!-- FirebaseMessagingService 설정 -->
         <service
             android:name="com.google.firebase.messaging.FirebaseMessagingService"
             android:exported="true"
