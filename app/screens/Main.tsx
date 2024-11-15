@@ -231,7 +231,7 @@ function Main({navigation}: Props) {
         <Text style={styles.title}>우리 아기 한눈에 보기</Text>
 
         <View style={styles.stream}>
-          {isBuffering && <ActivityIndicator size="large" color="#0000ff" />}
+          {isBuffering && <ActivityIndicator size="large" color="#ffffff" />}
           {isConnected ? (
             <VLCPlayer
               style={styles.vlcPlayer}
@@ -389,7 +389,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     borderRadius: 10,
-    marginBottom: 11,
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.2,
     shadowRadius: 3,
@@ -401,7 +400,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderColor: 'endregion',
     width: '90%',
-    height: 168,
+    height: '25%',
     borderRadius: 10,
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.2,
